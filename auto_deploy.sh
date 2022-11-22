@@ -10,8 +10,11 @@ hexo g
 # git checkout gh-pages
 cd public
 
+git init
 git add -A
 
 git commit -m 'auto deploy'
 
-git push hexo_src:gh-pages
+git push -f git@github.com:BenGuanRan/blog.git master:gh-pages
+
+

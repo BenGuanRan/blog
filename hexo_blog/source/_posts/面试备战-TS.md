@@ -219,3 +219,30 @@ const d: AB = {
     c: 2
 }
 ```
+
+## 泛型
+
+一个简单的泛型例子：
+```ts
+function func<T,k>(a: T, b: K): k {
+    return b
+}
+
+console.log(func("1", "2"));
+// ts会自动进行类型推断
+```
+
+泛型接口：
+```ts
+interface HasLength {
+    length: number
+}
+
+function func<T extends HasLength>(a: T): number {
+    return a.length
+}
+
+func("123")
+func({length:222})
+func(123) // Error
+```

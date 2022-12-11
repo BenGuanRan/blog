@@ -126,7 +126,10 @@ class ThemedButton extends React.Component {
 const [count, setCount] = useState(0)
 // 通过setCount修改count值
 ```
+渲染参数只会在组件首次渲染时使用，再次更新时会被忽略。如果初始值需要计算，则可以使用回调函数的方式进行返回值计算。
 2. useEffect
+副作用，什么是副作用？
+对于主作用，就是数据更新，视图重新渲染。其他都是副作用，例如生命周期、ajax、手动修改DOM、localStorage操作等。  
 能够模仿以下生命周期钩子
 - mounted
 - updated
@@ -146,6 +149,11 @@ useEffect(() => {
     console.log('模拟mounted挂载完成');
 }, [])
 ```
+**执行时机永远都是组件DOM渲染更新之后**
+两个参数
+- 默认状态，首次执行，每次组件更新执行（无第二个参数）
+- 首次执行（添加[]）
+- 首次执行，特定依赖项变化后执行（添加形如[count, num]）
 3. useContext
 ```jsx
 import React, { createContext, useContext } from 'react'
@@ -172,7 +180,11 @@ export default function Context() {
 
 4. useRef
 获取DOM节点
-5. useCallback、memo与useMemo
+使用步骤：
+- 导入useRef函数
+- 执行useRef函数传入null，返回值为一个对象，内部有current属性存放拿到的DOM对象
+- 通过ref绑定要获取的组件或元素
+1. useCallback、memo与useMemo
 这三者是用来性能优化的
 
 

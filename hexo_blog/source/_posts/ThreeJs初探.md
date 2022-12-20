@@ -62,4 +62,6 @@ tags:
 ```
 ## 总结
 1. ThreeJs三大要素：场景、相机、渲染器
-2. ·
+2. 将渲染器DOM节点插入DOM中（cnavas），放入场景和相机进行渲染
+3. 单独创建一个几何体放到场景中是看不见的，只有结合体结合材质形成网格之后才能出现在场景中。
+4. 采用window.requestAnimationFrame代替使用setTimeout,在重绘之前执行动画函数。

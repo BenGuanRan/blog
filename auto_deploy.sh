@@ -5,6 +5,14 @@ set -x  # 这里是为了看错误日志
 # 打包项目
 cd hexo_blog
 
+hexo clean
+
+git add .
+
+git commit -m 'auto deploy'
+
+git push origin hexo-src
+
 hexo g
 
 # git checkout gh-pages

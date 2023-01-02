@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="定义一项实时通讯技术，允许互联网应用或站点，在不借助中间媒体的情况下，建立浏览器点对点之间的连接，实现视频流，音频流等其他任意数据的传输。用户在无需安装任何插件或第三方软件的情况下，创建点对点的数据分享和电话会议成为可能。 底层协议与连接原理基于ICE（交互式连接建立）协议，穿透防火墙，从而实现端到端建立连接。 媒体协商(SDP)由于不同浏览器媒体编解码能力不同，因此需要协商出共有的编解码方案。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebRTC初体验">
+<meta property="og:url" content="https://benguanran.github.io/2022/11/12/WebRTC/index.html">
+<meta property="og:site_name" content="BenGuanRan&#39;s Blog">
+<meta property="og:description" content="定义一项实时通讯技术，允许互联网应用或站点，在不借助中间媒体的情况下，建立浏览器点对点之间的连接，实现视频流，音频流等其他任意数据的传输。用户在无需安装任何插件或第三方软件的情况下，创建点对点的数据分享和电话会议成为可能。 底层协议与连接原理基于ICE（交互式连接建立）协议，穿透防火墙，从而实现端到端建立连接。 媒体协商(SDP)由于不同浏览器媒体编解码能力不同，因此需要协商出共有的编解码方案。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s3-us-west-2.amazonaws.com/secure.notion-static.com/84abfcee-f515-4664-9f87-3a8ba7fa6e37/Untitled.png">
+<meta property="article:published_time" content="2022-11-11T16:03:54.000Z">
+<meta property="article:modified_time" content="2022-11-22T14:29:41.065Z">
+<meta property="article:author" content="BenGuanRan">
+<meta property="article:tag" content="WebRTC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s3-us-west-2.amazonaws.com/secure.notion-static.com/84abfcee-f515-4664-9f87-3a8ba7fa6e37/Untitled.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>WebRTC初体验</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/blog/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/blog/2022/11/12/%E5%89%8D%E7%AB%AF%E5%A4%87%E6%88%98-CSS/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/11/12/WebRTC/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/11/12/WebRTC/&text=WebRTC初体验"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/11/12/WebRTC/&title=WebRTC初体验"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/11/12/WebRTC/&is_video=false&description=WebRTC初体验"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=WebRTC初体验&body=Check out this article: https://benguanran.github.io/2022/11/12/WebRTC/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/11/12/WebRTC/&title=WebRTC初体验"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/11/12/WebRTC/&title=WebRTC初体验"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/11/12/WebRTC/&title=WebRTC初体验"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/11/12/WebRTC/&title=WebRTC初体验"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/11/12/WebRTC/&name=WebRTC初体验&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/11/12/WebRTC/&t=WebRTC初体验"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%95%E5%B1%82%E5%8D%8F%E8%AE%AE%E4%B8%8E%E8%BF%9E%E6%8E%A5%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">底层协议与连接原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AA%92%E4%BD%93%E5%8D%8F%E5%95%86-SDP"><span class="toc-number">2.1.</span> <span class="toc-text">媒体协商(SDP)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%8D%8F%E5%95%86-CANDIDATE"><span class="toc-number">2.2.</span> <span class="toc-text">网络协商(CANDIDATE)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E4%BB%A4%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">2.3.</span> <span class="toc-text">信令服务器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E6%91%84%E5%83%8F%E5%A4%B4"><span class="toc-number">3.1.</span> <span class="toc-text">打开摄像头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%8D%E7%85%A7"><span class="toc-number">3.2.</span> <span class="toc-text">拍照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E6%91%84%E5%83%8F%E5%A4%B4"><span class="toc-number">3.3.</span> <span class="toc-text">切换摄像头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B1%E4%BA%AB%E5%B1%8F%E5%B9%95"><span class="toc-number">3.4.</span> <span class="toc-text">共享屏幕</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%95%E5%88%B6%E5%AA%92%E4%BD%93%E6%B5%81"><span class="toc-number">3.5.</span> <span class="toc-text">录制媒体流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E4%BD%93demo%E4%BB%A3%E7%A0%81"><span class="toc-number">3.6.</span> <span class="toc-text">总体demo代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E4%BF%A1%E4%BB%A4%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">3.7.</span> <span class="toc-text">搭建信令服务器</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        WebRTC初体验
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">BenGuanRan</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-11-11T16:03:54.000Z" itemprop="datePublished">2022-11-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/WebRTC/" rel="tag">WebRTC</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>一项实时通讯技术，允许互联网应用或站点，在不借助中间媒体的情况下，建立浏览器点对点之间的连接，实现视频流，音频流等其他任意数据的传输。用户在无需安装任何插件或第三方软件的情况下，创建点对点的<strong>数据分享</strong>和<strong>电话会议</strong>成为可能。</p>
+<h2 id="底层协议与连接原理"><a href="#底层协议与连接原理" class="headerlink" title="底层协议与连接原理"></a>底层协议与连接原理</h2><p>基于<strong>ICE（交互式连接建立）协议</strong>，穿透防火墙，从而实现端到端建立连接。</p>
+<h3 id="媒体协商-SDP"><a href="#媒体协商-SDP" class="headerlink" title="媒体协商(SDP)"></a>媒体协商(SDP)</h3><p>由于不同浏览器媒体编解码能力不同，因此需要协商出共有的编解码方案。</p>
+<h3 id="网络协商-CANDIDATE"><a href="#网络协商-CANDIDATE" class="headerlink" title="网络协商(CANDIDATE)"></a>网络协商(CANDIDATE)</h3><p>理想情况下，每个浏览器都有一个自己的公网IP但实际上需要NAT技术动态分配IP</p>
+<p><strong>STUN（NAT会话穿越程序）</strong>允许位于NAT后的客户端找到自己的公网地址。</p>
+<p><img src="https://s3-us-west-2.amazonaws.com/secure.notion-static.com/84abfcee-f515-4664-9f87-3a8ba7fa6e37/Untitled.png" alt="Untitled"></p>
+<p><strong>TURN</strong> 当STUN会话穿越失败时，TURN会请求公网IP地址作为中继服务器进行分配。</p>
+<p><strong>ICE整合了STUN与TURN</strong></p>
+<h3 id="信令服务器"><a href="#信令服务器" class="headerlink" title="信令服务器"></a>信令服务器</h3><p>两个设备建立WebRTC连接需要一个信令服务器来实现双方通过网络进行连接。其作用是帮助连接双方在尽可能少暴露隐私的情况下建立连接。</p>
+<p>内容对信令服务器而言一点也不重要，其只负责传递这些内容。</p>
+<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><h3 id="打开摄像头"><a href="#打开摄像头" class="headerlink" title="打开摄像头"></a>打开摄像头</h3><p><strong>navigator.mediaDevices.getUserMedia(</strong><code>constraints</code><strong>)</strong></p>
+<p>返回一个promise，其中constraints传参如下：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">audio</span>: <span class="literal">true</span>, <span class="attr">video</span>: <span class="literal">true</span> &#125; <span class="comment">// 音视频</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">audio</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">video</span>: &#123; <span class="attr">width</span>: <span class="number">1280</span>, <span class="attr">height</span>: <span class="number">720</span> &#125; <span class="comment">// 设置分辨率</span></span><br><span class="line">&#125;</span><br><span class="line">。。。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">navigator.<span class="property">mediaDevices</span>.<span class="title function_">getUserMedia</span>(constraints).<span class="title function_">then</span>(<span class="function"><span class="params">stream</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;#local-video&#x27;</span>).<span class="property">srcObject</span> = stream</span><br><span class="line">&#125;).<span class="title function_">catch</span>(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">alert</span>(err)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="拍照"><a href="#拍照" class="headerlink" title="拍照"></a>拍照</h3><p>原理实现就是通过canvas  <strong>drawImage</strong>方法，将当前视频画面绘制入canvas页面，通过<strong>toDataURL</strong>方法，将画面转化为base64格式，放入Image src中。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">takePhoto</span>(<span class="params">vdo, pto</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> canvas = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;canvas&#x27;</span>)</span><br><span class="line">    canvas.<span class="property">width</span> = vdo.<span class="property">videoWidth</span></span><br><span class="line">    canvas.<span class="property">height</span> = vdo.<span class="property">videoHeight</span></span><br><span class="line">    <span class="keyword">const</span> ctx = canvas.<span class="title function_">getContext</span>(<span class="string">&#x27;2d&#x27;</span>)</span><br><span class="line">    ctx.<span class="title function_">drawImage</span>(vdo, <span class="number">0</span>, <span class="number">0</span>, canvas.<span class="property">width</span>, canvas.<span class="property">height</span>)</span><br><span class="line">    pto.<span class="property">src</span> = canvas.<span class="title function_">toDataURL</span>(<span class="string">&#x27;image/png&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="切换摄像头"><a href="#切换摄像头" class="headerlink" title="切换摄像头"></a>切换摄像头</h3><p>思路是通过**navigator.mediaDevices.enumerateDevices()**方法，获取所用设备，再进行筛选，通过设备ID引用设备。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取所有视频输入设备</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getDevices</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> devices = <span class="keyword">await</span> navigator.<span class="property">mediaDevices</span>.<span class="title function_">enumerateDevices</span>()</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;🚀🚀🚀 / devices&#x27;</span>, devices)</span><br><span class="line">  <span class="keyword">let</span> videoDevices = devices.<span class="title function_">filter</span>(<span class="function">(<span class="params">device</span>) =&gt;</span> device.<span class="property">kind</span> === <span class="string">&#x27;videoinput&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 切换设备</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">handleDeviceChange</span>(<span class="params">deviceId: string</span>) &#123;</span><br><span class="line">  <span class="title function_">getLocalStream</span>()</span><br><span class="line">  <span class="keyword">const</span> stream = <span class="keyword">await</span> navigator.<span class="property">mediaDevices</span>.<span class="title function_">getUserMedia</span>(&#123;</span><br><span class="line">    <span class="attr">audio</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">video</span>: &#123;</span><br><span class="line">      <span class="attr">deviceId</span>: &#123; <span class="attr">exact</span>: deviceId &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="共享屏幕"><a href="#共享屏幕" class="headerlink" title="共享屏幕"></a>共享屏幕</h3><p>思路是通过<strong>navigator.mediaDrvices.getDisplayMedia()<strong>方法，获取屏幕视频流，再通过video的</strong>srcObject</strong>属性展示。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">shareScreen</span>(<span class="params">vdo</span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> localStream = <span class="keyword">await</span> navigator.<span class="property">mediaDevices</span>.<span class="title function_">getDisplayMedia</span>(&#123;</span><br><span class="line">            <span class="attr">audio</span>: <span class="literal">true</span>,</span><br><span class="line">            <span class="attr">video</span>: &#123;</span><br><span class="line">                <span class="attr">width</span>: <span class="number">350</span></span><br><span class="line">            &#125;,</span><br><span class="line">        &#125;)</span><br><span class="line">        vdo.<span class="property">srcObject</span> = localStream</span><br><span class="line">    &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">        <span class="title function_">alert</span>(error)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="录制媒体流"><a href="#录制媒体流" class="headerlink" title="录制媒体流"></a>录制媒体流</h3><p>先查看浏览器支持的编码格式，通过**navigator.mediaDevices.MediaRecorder.isTypeSupported()<strong>方法，再通过</strong>mediaRecorder &#x3D; new MediaRecorder(localStream, options)**进行录制。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取浏览器支持的媒体类型</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">getSupportedMimeTypes</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> media = <span class="string">&#x27;video&#x27;</span></span><br><span class="line">        <span class="comment">// 常用的视频格式</span></span><br><span class="line">        <span class="keyword">const</span> types = [</span><br><span class="line">            <span class="string">&#x27;webm&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;mp4&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ogg&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;mov&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;avi&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;wmv&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;flv&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;mkv&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;ts&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;x-matroska&#x27;</span>,</span><br><span class="line">        ]</span><br><span class="line">        <span class="comment">// 常用的视频编码</span></span><br><span class="line">        <span class="keyword">const</span> codecs = [<span class="string">&#x27;vp9&#x27;</span>, <span class="string">&#x27;vp9.0&#x27;</span>, <span class="string">&#x27;vp8&#x27;</span>, <span class="string">&#x27;vp8.0&#x27;</span>, <span class="string">&#x27;avc1&#x27;</span>, <span class="string">&#x27;av1&#x27;</span>, <span class="string">&#x27;h265&#x27;</span>, <span class="string">&#x27;h264&#x27;</span>]</span><br><span class="line">        <span class="comment">// 支持的媒体类型</span></span><br><span class="line">        <span class="keyword">const</span> supported = []</span><br><span class="line">        <span class="keyword">const</span> isSupported = <span class="title class_">MediaRecorder</span>.<span class="property">isTypeSupported</span></span><br><span class="line">        <span class="comment">// 遍历判断所有的媒体类型</span></span><br><span class="line">        types.<span class="title function_">forEach</span>(<span class="function">(<span class="params">type</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">const</span> mimeType = <span class="string">`<span class="subst">$&#123;media&#125;</span>/<span class="subst">$&#123;type&#125;</span>`</span></span><br><span class="line">            codecs.<span class="title function_">forEach</span>(<span class="function">(<span class="params">codec</span>) =&gt;</span></span><br><span class="line">                [</span><br><span class="line">                    <span class="string">`<span class="subst">$&#123;mimeType&#125;</span>;codecs=<span class="subst">$&#123;codec&#125;</span>`</span>,</span><br><span class="line">                    <span class="string">`<span class="subst">$&#123;mimeType&#125;</span>;codecs=<span class="subst">$&#123;codec.toUpperCase()&#125;</span>`</span>,</span><br><span class="line">                ].<span class="title function_">forEach</span>(<span class="function">(<span class="params">variation</span>) =&gt;</span> &#123;</span><br><span class="line">                    <span class="keyword">if</span> (<span class="title function_">isSupported</span>(variation)) supported.<span class="title function_">push</span>(variation)</span><br><span class="line">                &#125;),</span><br><span class="line">            )</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_">isSupported</span>(mimeType)) supported.<span class="title function_">push</span>(mimeType)</span><br><span class="line">        &#125;)</span><br><span class="line">        <span class="keyword">return</span> supported</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 开始录制</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">recordingScreen</span>(<span class="params">localStream</span>) &#123;</span><br><span class="line">        blobs = []</span><br><span class="line">        <span class="keyword">const</span> kbps = <span class="number">1024</span></span><br><span class="line">        <span class="keyword">const</span> <span class="title class_">Mbps</span> = kbps * kbps</span><br><span class="line">        <span class="keyword">const</span> options = &#123;</span><br><span class="line">            <span class="attr">audioBitsPerSecond</span>: <span class="number">128000</span>,</span><br><span class="line">            <span class="attr">videoBitsPerSecond</span>: <span class="number">2500000</span>,</span><br><span class="line">            <span class="attr">mimeType</span>: <span class="string">&#x27;video/webm; codecs=&quot;vp8,opus&quot;&#x27;</span>,</span><br><span class="line">        &#125;</span><br><span class="line">        mediaRecorder = <span class="keyword">new</span> <span class="title class_">MediaRecorder</span>(localStream, options)</span><br><span class="line">        mediaRecorder.<span class="title function_">start</span>(<span class="number">100</span>)</span><br><span class="line">        mediaRecorder.<span class="property">ondataavailable</span> = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="comment">// 将录制的数据合并成一个 Blob 对象</span></span><br><span class="line">            <span class="comment">// const blob = new Blob([e.data], &#123; type: e.data.type &#125;)</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 🌸重点是这个地方，我们不要把获取到的 e.data.type设置成 blob 的 type，而是直接改成 mp4</span></span><br><span class="line">            blobs.<span class="title function_">push</span>(e.<span class="property">data</span>)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 暂停录制</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">stopRecord</span>(<span class="params"></span>) &#123;</span><br><span class="line">        mediaRecorder &amp;&amp; mediaRecorder.<span class="title function_">stop</span>();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 回放</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">replay</span>(<span class="params">replayer, blobs</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> blob = <span class="keyword">new</span> <span class="title class_">Blob</span>(blobs, &#123; <span class="attr">type</span>: <span class="string">&#x27;video/mp4&#x27;</span> &#125;);</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(blobs);</span><br><span class="line">        replayer.<span class="property">src</span> = <span class="variable constant_">URL</span>.<span class="title function_">createObjectURL</span>(blob);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 下载</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">downloadVideo</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> blob = <span class="keyword">new</span> <span class="title class_">Blob</span>(blobs, &#123; <span class="attr">type</span>: <span class="string">&#x27;video/mp4&#x27;</span> &#125;);</span><br><span class="line">        <span class="keyword">var</span> url = <span class="variable constant_">URL</span>.<span class="title function_">createObjectURL</span>(blob);</span><br><span class="line">        <span class="keyword">var</span> a = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line">        a.<span class="property">href</span> = url;</span><br><span class="line">        a.<span class="property">download</span> = <span class="string">&#x27;record.mp4&#x27;</span>;</span><br><span class="line">        a.<span class="title function_">click</span>();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总体demo代码"><a href="#总体demo代码" class="headerlink" title="总体demo代码"></a>总体demo代码</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="variable constant_">DOCTYPE</span> html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;</span><br><span class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</span><br><span class="line">    &lt;title&gt;Document&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;video id=&quot;test-video&quot; autoplay playsinline muted&gt; &lt;/video&gt;</span><br><span class="line">    &lt;button id=&quot;open-btn&quot;&gt;打开摄像头&lt;/button&gt;</span><br><span class="line">    &lt;button id=&quot;close-btn&quot;&gt;关闭摄像头&lt;/button&gt;</span><br><span class="line">    &lt;button id=&quot;takephoto-btn&quot;&gt;拍照&lt;/button&gt;</span><br><span class="line">    &lt;button id=&quot;change-cinema-btn&quot;&gt;切换设备&lt;/button&gt;</span><br><span class="line">    &lt;button id=&quot;share-screen-btn&quot;&gt;共享屏幕&lt;/button&gt;</span><br><span class="line">    &lt;button id=&quot;recording-btn&quot;&gt;开始录制&lt;/button&gt;</span><br><span class="line">    &lt;button id=&quot;stop-recording-btn&quot;&gt;停止录制&lt;/button&gt;</span><br><span class="line">    &lt;button id=&quot;review-recording-btn&quot;&gt;回放&lt;/button&gt;</span><br><span class="line">    &lt;button id=&quot;download-btn&quot;&gt;下载录制视频&lt;/button&gt;</span><br><span class="line">    &lt;img id=&quot;photo&quot; src=&quot;&quot; alt=&quot;&quot;&gt;</span><br><span class="line">    &lt;video id=&quot;replay-player&quot; autoplay playsinline muted&gt;&lt;/video&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    const vdo = document.querySelector(&#x27;#test-video&#x27;)</span><br><span class="line">    const o_btn = document.querySelector(&#x27;#open-btn&#x27;)</span><br><span class="line">    const c_btn = document.querySelector(&#x27;#close-btn&#x27;)</span><br><span class="line">    const t_btn = document.querySelector(&#x27;#takephoto-btn&#x27;)</span><br><span class="line">    const g_btn = document.querySelector(&#x27;#change-cinema-btn&#x27;)</span><br><span class="line">    const s_btn = document.querySelector(&#x27;#share-screen-btn&#x27;)</span><br><span class="line">    const r_btn = document.querySelector(&#x27;#recording-btn&#x27;)</span><br><span class="line">    const b_btn = document.querySelector(&#x27;#stop-recording-btn&#x27;)</span><br><span class="line">    const l_btn = document.querySelector(&#x27;#review-recording-btn&#x27;)</span><br><span class="line">    const pto = document.querySelector(&#x27;#photo&#x27;)</span><br><span class="line">    const replayer = document.querySelector(&#x27;#replay-player&#x27;)</span><br><span class="line">    const d_btn = document.querySelector(&#x27;#download-btn&#x27;)</span><br><span class="line">    let blobs = []; // 用于存放录制视频的二进制文件</span><br><span class="line">    let mediaRecorder = null; // 录制对象</span><br><span class="line">    // 获取视频流</span><br><span class="line">    async function getVideoStream(vdo) &#123;</span><br><span class="line">        const content = &#123;</span><br><span class="line">            video: &#123;</span><br><span class="line">                width: 300,</span><br><span class="line">                heigth: 150</span><br><span class="line">            &#125;,</span><br><span class="line">            audio: true</span><br><span class="line">        &#125;</span><br><span class="line">        try &#123;</span><br><span class="line">            const videoStream = await navigator.mediaDevices.getUserMedia(content)</span><br><span class="line">            vdo.srcObject = videoStream</span><br><span class="line">        &#125; catch (error) &#123;</span><br><span class="line">            alert(error)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    // 删除视频流</span><br><span class="line">    function removeVideoStream(vdo) &#123;</span><br><span class="line">        vdo.srcObject = null</span><br><span class="line">    &#125;</span><br><span class="line">    // 拍照</span><br><span class="line">    function takePhoto(vdo, pto) &#123;</span><br><span class="line">        const canvas = document.createElement(&#x27;canvas&#x27;)</span><br><span class="line">        canvas.width = vdo.videoWidth</span><br><span class="line">        canvas.height = vdo.videoHeight</span><br><span class="line">        const ctx = canvas.getContext(&#x27;2d&#x27;)</span><br><span class="line">        ctx.drawImage(vdo, 0, 0, canvas.width, canvas.height)</span><br><span class="line">        pto.src = canvas.toDataURL(&#x27;image/png&#x27;)</span><br><span class="line">    &#125;</span><br><span class="line">    // 切换摄像头</span><br><span class="line">    async function changeCinema() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            const devices = await navigator.mediaDevices.enumerateDevices()</span><br><span class="line">            const videoDevices = devices.filter((device) =&gt; device.kind === &#x27;videoinput&#x27;)</span><br><span class="line">            console.log(videoDevices);</span><br><span class="line">        &#125; catch (error) &#123;</span><br><span class="line">            alert(error)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    // 共享屏幕</span><br><span class="line">    async function shareScreen(vdo) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            const localStream = await navigator.mediaDevices.getDisplayMedia(&#123;</span><br><span class="line">                audio: true,</span><br><span class="line">                video: &#123;</span><br><span class="line">                    width: 350</span><br><span class="line">                &#125;,</span><br><span class="line">            &#125;)</span><br><span class="line">            vdo.srcObject = localStream</span><br><span class="line">        &#125; catch (error) &#123;</span><br><span class="line">            alert(error)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    // 获取浏览器支持的媒体类型</span><br><span class="line">    function getSupportedMimeTypes() &#123;</span><br><span class="line">        const media = &#x27;video&#x27;</span><br><span class="line">        // 常用的视频格式</span><br><span class="line">        const types = [</span><br><span class="line">            &#x27;webm&#x27;,</span><br><span class="line">            &#x27;mp4&#x27;,</span><br><span class="line">            &#x27;ogg&#x27;,</span><br><span class="line">            &#x27;mov&#x27;,</span><br><span class="line">            &#x27;avi&#x27;,</span><br><span class="line">            &#x27;wmv&#x27;,</span><br><span class="line">            &#x27;flv&#x27;,</span><br><span class="line">            &#x27;mkv&#x27;,</span><br><span class="line">            &#x27;ts&#x27;,</span><br><span class="line">            &#x27;x-matroska&#x27;,</span><br><span class="line">        ]</span><br><span class="line">        // 常用的视频编码</span><br><span class="line">        const codecs = [&#x27;vp9&#x27;, &#x27;vp9.0&#x27;, &#x27;vp8&#x27;, &#x27;vp8.0&#x27;, &#x27;avc1&#x27;, &#x27;av1&#x27;, &#x27;h265&#x27;, &#x27;h264&#x27;]</span><br><span class="line">        // 支持的媒体类型</span><br><span class="line">        const supported = []</span><br><span class="line">        const isSupported = MediaRecorder.isTypeSupported</span><br><span class="line">        // 遍历判断所有的媒体类型</span><br><span class="line">        types.forEach((type) =&gt; &#123;</span><br><span class="line">            const mimeType = `$&#123;media&#125;/$&#123;type&#125;`</span><br><span class="line">            codecs.forEach((codec) =&gt;</span><br><span class="line">                [</span><br><span class="line">                    `$&#123;mimeType&#125;;codecs=$&#123;codec&#125;`,</span><br><span class="line">                    `$&#123;mimeType&#125;;codecs=$&#123;codec.toUpperCase()&#125;`,</span><br><span class="line">                ].forEach((variation) =&gt; &#123;</span><br><span class="line">                    if (isSupported(variation)) supported.push(variation)</span><br><span class="line">                &#125;),</span><br><span class="line">            )</span><br><span class="line">            if (isSupported(mimeType)) supported.push(mimeType)</span><br><span class="line">        &#125;)</span><br><span class="line">        return supported</span><br><span class="line">    &#125;</span><br><span class="line">    // 开始录制</span><br><span class="line">    function recordingScreen(localStream) &#123;</span><br><span class="line">        blobs = []</span><br><span class="line">        const kbps = 1024</span><br><span class="line">        const Mbps = kbps * kbps</span><br><span class="line">        const options = &#123;</span><br><span class="line">            audioBitsPerSecond: 128000,</span><br><span class="line">            videoBitsPerSecond: 2500000,</span><br><span class="line">            mimeType: &#x27;video/webm; codecs=&quot;vp8,opus&quot;&#x27;,</span><br><span class="line">        &#125;</span><br><span class="line">        mediaRecorder = new MediaRecorder(localStream, options)</span><br><span class="line">        mediaRecorder.start(100)</span><br><span class="line">        mediaRecorder.ondataavailable = (e) =&gt; &#123;</span><br><span class="line">            // 将录制的数据合并成一个 Blob 对象</span><br><span class="line">            // const blob = new Blob([e.data], &#123; type: e.data.type &#125;)</span><br><span class="line"></span><br><span class="line">            // 🌸重点是这个地方，我们不要把获取到的 e.data.type设置成 blob 的 type，而是直接改成 mp4</span><br><span class="line">            blobs.push(e.data)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    // 暂停录制</span><br><span class="line">    function stopRecord() &#123;</span><br><span class="line">        mediaRecorder &amp;&amp; mediaRecorder.stop();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    // 回放</span><br><span class="line">    function replay(replayer, blobs) &#123;</span><br><span class="line">        const blob = new Blob(blobs, &#123; type: &#x27;video/mp4&#x27; &#125;);</span><br><span class="line">        console.log(blobs);</span><br><span class="line">        replayer.src = URL.createObjectURL(blob);</span><br><span class="line">    &#125;</span><br><span class="line">    // 下载</span><br><span class="line">    function downloadVideo() &#123;</span><br><span class="line">        var blob = new Blob(blobs, &#123; type: &#x27;video/mp4&#x27; &#125;);</span><br><span class="line">        var url = URL.createObjectURL(blob);</span><br><span class="line">        var a = document.createElement(&#x27;a&#x27;);</span><br><span class="line">        a.href = url;</span><br><span class="line">        a.download = &#x27;record.mp4&#x27;;</span><br><span class="line">        a.click();</span><br><span class="line">    &#125;</span><br><span class="line">    o_btn.onclick = () =&gt; &#123;</span><br><span class="line">        return getVideoStream(vdo)</span><br><span class="line">    &#125;</span><br><span class="line">    c_btn.onclick = () =&gt; &#123;</span><br><span class="line">        return removeVideoStream(vdo)</span><br><span class="line">    &#125;</span><br><span class="line">    t_btn.onclick = () =&gt; &#123;</span><br><span class="line">        return takePhoto(vdo, pto)</span><br><span class="line">    &#125;</span><br><span class="line">    g_btn.onclick = () =&gt; &#123;</span><br><span class="line">        return changeCinema()</span><br><span class="line">    &#125;</span><br><span class="line">    s_btn.onclick = () =&gt; &#123;</span><br><span class="line">        return shareScreen(vdo)</span><br><span class="line">    &#125;</span><br><span class="line">    r_btn.onclick = () =&gt; &#123;</span><br><span class="line">        return recordingScreen(vdo.srcObject)</span><br><span class="line">    &#125;</span><br><span class="line">    b_btn.onclick = () =&gt; &#123;</span><br><span class="line">        return stopRecord()</span><br><span class="line">    &#125;</span><br><span class="line">    l_btn.onclick = () =&gt; &#123;</span><br><span class="line">        return replay(replayer, blobs)</span><br><span class="line">    &#125;</span><br><span class="line">    d_btn.onclick = () =&gt; &#123;</span><br><span class="line">        return downloadVideo(blobs)</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="搭建信令服务器"><a href="#搭建信令服务器" class="headerlink" title="搭建信令服务器"></a>搭建信令服务器</h3>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/search/">Search</a></li>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/archives/">writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li>
+         
+          <li><a href="/blog/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%95%E5%B1%82%E5%8D%8F%E8%AE%AE%E4%B8%8E%E8%BF%9E%E6%8E%A5%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">底层协议与连接原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AA%92%E4%BD%93%E5%8D%8F%E5%95%86-SDP"><span class="toc-number">2.1.</span> <span class="toc-text">媒体协商(SDP)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%8D%8F%E5%95%86-CANDIDATE"><span class="toc-number">2.2.</span> <span class="toc-text">网络协商(CANDIDATE)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%A1%E4%BB%A4%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">2.3.</span> <span class="toc-text">信令服务器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E6%91%84%E5%83%8F%E5%A4%B4"><span class="toc-number">3.1.</span> <span class="toc-text">打开摄像头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%8D%E7%85%A7"><span class="toc-number">3.2.</span> <span class="toc-text">拍照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E6%91%84%E5%83%8F%E5%A4%B4"><span class="toc-number">3.3.</span> <span class="toc-text">切换摄像头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B1%E4%BA%AB%E5%B1%8F%E5%B9%95"><span class="toc-number">3.4.</span> <span class="toc-text">共享屏幕</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%95%E5%88%B6%E5%AA%92%E4%BD%93%E6%B5%81"><span class="toc-number">3.5.</span> <span class="toc-text">录制媒体流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E4%BD%93demo%E4%BB%A3%E7%A0%81"><span class="toc-number">3.6.</span> <span class="toc-text">总体demo代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E4%BF%A1%E4%BB%A4%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">3.7.</span> <span class="toc-text">搭建信令服务器</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/11/12/WebRTC/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/11/12/WebRTC/&text=WebRTC初体验"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/11/12/WebRTC/&title=WebRTC初体验"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/11/12/WebRTC/&is_video=false&description=WebRTC初体验"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=WebRTC初体验&body=Check out this article: https://benguanran.github.io/2022/11/12/WebRTC/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/11/12/WebRTC/&title=WebRTC初体验"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/11/12/WebRTC/&title=WebRTC初体验"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/11/12/WebRTC/&title=WebRTC初体验"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/11/12/WebRTC/&title=WebRTC初体验"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/11/12/WebRTC/&name=WebRTC初体验&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/11/12/WebRTC/&t=WebRTC初体验"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    BenGuanRan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/blog/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/blog/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+    <!-- jquery -->
+ 
+  
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+   
+    
+<script src="/blog/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

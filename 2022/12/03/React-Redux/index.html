@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="React-Redux是基于React封装的Redux库，仅支持react 三大核心概念1. state存放公共状态 12345678910&amp;#123; todos: [&amp;#123;     text: &amp;#x27;Eat food&amp;#x27;,     completed: true &amp;#125;, &amp;#123;     text: &amp;#x27;Exercise&amp;#x27;,     compl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React-Redux(7)">
+<meta property="og:url" content="https://benguanran.github.io/2022/12/03/React-Redux/index.html">
+<meta property="og:site_name" content="BenGuanRan&#39;s Blog">
+<meta property="og:description" content="React-Redux是基于React封装的Redux库，仅支持react 三大核心概念1. state存放公共状态 12345678910&amp;#123; todos: [&amp;#123;     text: &amp;#x27;Eat food&amp;#x27;,     completed: true &amp;#125;, &amp;#123;     text: &amp;#x27;Exercise&amp;#x27;,     compl">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-12-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-12-06T12:20:30.072Z">
+<meta property="article:author" content="BenGuanRan">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>React-Redux(7)</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/blog/2022/12/07/%E8%9B%8B%E7%82%92%E9%A5%AD%E7%9A%84%E5%81%9A%E6%B3%95/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/blog/2022/12/02/React-%E9%A1%B9%E7%9B%AE%E8%84%9A%E6%89%8B%E6%9E%B6/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/12/03/React-Redux/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/12/03/React-Redux/&text=React-Redux(7)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/12/03/React-Redux/&title=React-Redux(7)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/12/03/React-Redux/&is_video=false&description=React-Redux(7)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=React-Redux(7)&body=Check out this article: https://benguanran.github.io/2022/12/03/React-Redux/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/12/03/React-Redux/&title=React-Redux(7)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/12/03/React-Redux/&title=React-Redux(7)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/12/03/React-Redux/&title=React-Redux(7)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/12/03/React-Redux/&title=React-Redux(7)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/12/03/React-Redux/&name=React-Redux(7)&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/12/03/React-Redux/&t=React-Redux(7)"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#React-Redux"><span class="toc-number">1.</span> <span class="toc-text">React-Redux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E5%A4%A7%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">三大核心概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E5%A4%A7%E5%8E%9F%E5%88%99"><span class="toc-number">1.2.</span> <span class="toc-text">三大原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Action"><span class="toc-number">1.3.</span> <span class="toc-text">Action</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reducer"><span class="toc-number">1.4.</span> <span class="toc-text">Reducer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Store"><span class="toc-number">1.5.</span> <span class="toc-text">Store</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="toc-number">1.6.</span> <span class="toc-text">数据流</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        React-Redux(7)
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">BenGuanRan</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-12-02T16:00:00.000Z" itemprop="datePublished">2022-12-03</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/React/" rel="tag">React</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="React-Redux"><a href="#React-Redux" class="headerlink" title="React-Redux"></a>React-Redux</h2><p>是基于React封装的Redux库，仅支持react</p>
+<h3 id="三大核心概念"><a href="#三大核心概念" class="headerlink" title="三大核心概念"></a>三大核心概念</h3><p><strong>1. state</strong><br>存放公共状态</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> <span class="attr">todos</span>: [&#123;</span><br><span class="line">     <span class="attr">text</span>: <span class="string">&#x27;Eat food&#x27;</span>,</span><br><span class="line">     <span class="attr">completed</span>: <span class="literal">true</span></span><br><span class="line"> &#125;, &#123;</span><br><span class="line">     <span class="attr">text</span>: <span class="string">&#x27;Exercise&#x27;</span>,</span><br><span class="line">     <span class="attr">completed</span>: <span class="literal">false</span></span><br><span class="line"> &#125;],</span><br><span class="line"> <span class="attr">visibilityFilter</span>: <span class="string">&#x27;SHOW_COMPLETED&#x27;</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>2. action</strong><br>就是一个普通js对象，用来描述发生了什么。<br>强制使用 action 来描述所有变化带来的好处是可以清晰地知道应用中到底发生了什么。如果一些东西改变了，就可以知道为什么变。<br><strong>action相当于描述发生什么的指示器。</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">type</span>: <span class="string">&#x27;ADD_TODO&#x27;</span>, <span class="attr">text</span>: <span class="string">&#x27;Go to swimming pool&#x27;</span> &#125;</span><br><span class="line">&#123; <span class="attr">type</span>: <span class="string">&#x27;TOGGLE_TODO&#x27;</span>, <span class="attr">index</span>: <span class="number">1</span> &#125;</span><br><span class="line">&#123; <span class="attr">type</span>: <span class="string">&#x27;SET_VISIBILITY_FILTER&#x27;</span>, <span class="attr">filter</span>: <span class="string">&#x27;SHOW_ALL&#x27;</span> &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>3. reducer</strong><br>将action和state串联起来，开发一些函数，真正按照action的指示来改变state</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">visibilityFilter</span>(<span class="params">state = <span class="string">&#x27;SHOW_ALL&#x27;</span>, action</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (action.<span class="property">type</span> === <span class="string">&#x27;SET_VISIBILITY_FILTER&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> action.<span class="property">filter</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">todos</span>(<span class="params">state = [], action</span>) &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.<span class="property">type</span>) &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="string">&#x27;ADD_TODO&#x27;</span>:</span><br><span class="line">    <span class="keyword">return</span> state.<span class="title function_">concat</span>([&#123; <span class="attr">text</span>: action.<span class="property">text</span>, <span class="attr">completed</span>: <span class="literal">false</span> &#125;]);</span><br><span class="line">  <span class="keyword">case</span> <span class="string">&#x27;TOGGLE_TODO&#x27;</span>:</span><br><span class="line">    <span class="keyword">return</span> state.<span class="title function_">map</span>(<span class="function">(<span class="params">todo, index</span>) =&gt;</span></span><br><span class="line">      action.<span class="property">index</span> === index ?</span><br><span class="line">        &#123; <span class="attr">text</span>: todo.<span class="property">text</span>, <span class="attr">completed</span>: !todo.<span class="property">completed</span> &#125; :</span><br><span class="line">        todo</span><br><span class="line">   )</span><br><span class="line">  <span class="attr">default</span>:</span><br><span class="line">    <span class="keyword">return</span> state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="三大原则"><a href="#三大原则" class="headerlink" title="三大原则"></a>三大原则</h3><ul>
+<li>单一数据源<br>所有state存放到一起</li>
+<li>State只读<br>唯一改变state的方法就是触发action，用于描述已发生事件的普通对象。</li>
+<li>使用传函数来执行修改<br>需要编写reducers真正修改state，Reducer 只是一些纯函数，它接收先前的 state 和 action，并返回新的 state。</li>
+</ul>
+<h3 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h3><p>action创建函数，返回一个action对象，一些action示例。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * action 类型</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">ADD_TODO</span> = <span class="string">&#x27;ADD_TODO&#x27;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">TOGGLE_TODO</span> = <span class="string">&#x27;TOGGLE_TODO&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">SET_VISIBILITY_FILTER</span> = <span class="string">&#x27;SET_VISIBILITY_FILTER&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 其它的常量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title class_">VisibilityFilters</span> = &#123;</span><br><span class="line">  <span class="attr">SHOW_ALL</span>: <span class="string">&#x27;SHOW_ALL&#x27;</span>,</span><br><span class="line">  <span class="attr">SHOW_COMPLETED</span>: <span class="string">&#x27;SHOW_COMPLETED&#x27;</span>,</span><br><span class="line">  <span class="attr">SHOW_ACTIVE</span>: <span class="string">&#x27;SHOW_ACTIVE&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * action 创建函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">addTodo</span>(<span class="params">text</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">type</span>: <span class="variable constant_">ADD_TODO</span>, text &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">toggleTodo</span>(<span class="params">index</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">type</span>: <span class="variable constant_">TOGGLE_TODO</span>, index &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">setVisibilityFilter</span>(<span class="params">filter</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">type</span>: <span class="variable constant_">SET_VISIBILITY_FILTER</span>, filter &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Reducer"><a href="#Reducer" class="headerlink" title="Reducer"></a>Reducer</h3><p>Reducer本质上就是这种形式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(state1, action)=&gt;&#123;</span><br><span class="line">    <span class="comment">// 根据action指示生成新的state2</span></span><br><span class="line">    <span class="keyword">return</span> stste2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是一个Reducer的示例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="variable constant_">ADD_TODO</span>,</span><br><span class="line">  <span class="variable constant_">TOGGLE_TODO</span>,</span><br><span class="line">  <span class="variable constant_">SET_VISIBILITY_FILTER</span>,</span><br><span class="line">  <span class="title class_">VisibilityFilters</span></span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&#x27;./actions&#x27;</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">todoApp</span>(<span class="params">state = initialState, action</span>) &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.<span class="property">type</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">SET_VISIBILITY_FILTER</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="title class_">Object</span>.<span class="title function_">assign</span>(&#123;&#125;, state, &#123;</span><br><span class="line">        <span class="attr">visibilityFilter</span>: action.<span class="property">filter</span></span><br><span class="line">      &#125;)</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">ADD_TODO</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="title class_">Object</span>.<span class="title function_">assign</span>(&#123;&#125;, state, &#123;</span><br><span class="line">        <span class="attr">todos</span>: [</span><br><span class="line">          ...state.<span class="property">todos</span>,</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">text</span>: action.<span class="property">text</span>,</span><br><span class="line">            <span class="attr">completed</span>: <span class="literal">false</span></span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;)</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">TOGGLE_TODO</span>:</span><br><span class="line">      <span class="keyword">return</span> <span class="title class_">Object</span>.<span class="title function_">assign</span>(&#123;&#125;, state, &#123;</span><br><span class="line">        <span class="attr">todos</span>: state.<span class="property">todos</span>.<span class="title function_">map</span>(<span class="function">(<span class="params">todo, index</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (index === action.<span class="property">index</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title class_">Object</span>.<span class="title function_">assign</span>(&#123;&#125;, todo, &#123;</span><br><span class="line">              <span class="attr">completed</span>: !todo.<span class="property">completed</span></span><br><span class="line">            &#125;)</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">return</span> todo</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line">    <span class="attr">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>拆分Reducer</strong><br>可以将上边的示例代码中对一些逻辑进行单独封装成一个新的reducer</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">todos</span>(<span class="params">state = [], action</span>) &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.<span class="property">type</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">ADD_TODO</span>:</span><br><span class="line">      <span class="keyword">return</span> [</span><br><span class="line">        ...state,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="attr">text</span>: action.<span class="property">text</span>,</span><br><span class="line">          <span class="attr">completed</span>: <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">TOGGLE_TODO</span>:</span><br><span class="line">      <span class="keyword">return</span> state.<span class="title function_">map</span>(<span class="function">(<span class="params">todo, index</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (index === action.<span class="property">index</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title class_">Object</span>.<span class="title function_">assign</span>(&#123;&#125;, todo, &#123;</span><br><span class="line">            <span class="attr">completed</span>: !todo.<span class="property">completed</span></span><br><span class="line">          &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> todo</span><br><span class="line">      &#125;)</span><br><span class="line">    <span class="attr">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">visibilityFilter</span>(<span class="params">state = SHOW_ALL, action</span>) &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.<span class="property">type</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">SET_VISIBILITY_FILTER</span>:</span><br><span class="line">      <span class="keyword">return</span> action.<span class="property">filter</span></span><br><span class="line">    <span class="attr">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">todoApp</span>(<span class="params">state = &#123;&#125;, action</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">visibilityFilter</span>: <span class="title function_">visibilityFilter</span>(state.<span class="property">visibilityFilter</span>, action),</span><br><span class="line">    <span class="attr">todos</span>: <span class="title function_">todos</span>(state.<span class="property">todos</span>, action)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述示例只有todoApp返回了完整的state，因此是主Reducer，负责联合子Reducer模块<br>Redux提供API——<strong>combineReducers</strong>也可以实现该功能。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; combineReducers &#125; <span class="keyword">from</span> <span class="string">&#x27;redux&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> todoApp = <span class="title function_">combineReducers</span>(&#123;</span><br><span class="line">  visibilityFilter,</span><br><span class="line">  todos</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> todoApp</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; combineReducers &#125; <span class="keyword">from</span> <span class="string">&#x27;redux&#x27;</span></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> reducers <span class="keyword">from</span> <span class="string">&#x27;./reducers&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> todoApp = <span class="title function_">combineReducers</span>(reducers)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h3><p>Store负责将reducer、action、state联系到一起<br>Store有以下职责：</p>
+<ul>
+<li>维持应用的 state；</li>
+<li>提供 getState() 方法获取 state；</li>
+<li>提供 dispatch(action) 方法更新 state；</li>
+<li>通过 subscribe(listener) 注册监听器;</li>
+<li>通过 subscribe(listener) 返回的函数注销监听器。<br>创建一个store<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createStore &#125; <span class="keyword">from</span> <span class="string">&#x27;redux&#x27;</span></span><br><span class="line"><span class="keyword">import</span> todoApp <span class="keyword">from</span> <span class="string">&#x27;./reducers&#x27;</span></span><br><span class="line"><span class="keyword">let</span> store = <span class="title function_">createStore</span>(todoApp)</span><br><span class="line"><span class="comment">// createStore第二个参数可选，用于初始化state</span></span><br></pre></td></tr></table></figure>
+发起Action<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  addTodo,</span><br><span class="line">  toggleTodo,</span><br><span class="line">  setVisibilityFilter,</span><br><span class="line">  <span class="title class_">VisibilityFilters</span></span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&#x27;./actions&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印初始状态</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(store.<span class="title function_">getState</span>())</span><br><span class="line"></span><br><span class="line"><span class="comment">// 每次 state 更新时，打印日志</span></span><br><span class="line"><span class="comment">// 注意 subscribe() 返回一个函数用来注销监听器</span></span><br><span class="line"><span class="keyword">const</span> unsubscribe = store.<span class="title function_">subscribe</span>(<span class="function">() =&gt;</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(store.<span class="title function_">getState</span>())</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 发起一系列 action</span></span><br><span class="line">store.<span class="title function_">dispatch</span>(<span class="title function_">addTodo</span>(<span class="string">&#x27;Learn about actions&#x27;</span>))</span><br><span class="line">store.<span class="title function_">dispatch</span>(<span class="title function_">addTodo</span>(<span class="string">&#x27;Learn about reducers&#x27;</span>))</span><br><span class="line">store.<span class="title function_">dispatch</span>(<span class="title function_">addTodo</span>(<span class="string">&#x27;Learn about store&#x27;</span>))</span><br><span class="line">store.<span class="title function_">dispatch</span>(<span class="title function_">toggleTodo</span>(<span class="number">0</span>))</span><br><span class="line">store.<span class="title function_">dispatch</span>(<span class="title function_">toggleTodo</span>(<span class="number">1</span>))</span><br><span class="line">store.<span class="title function_">dispatch</span>(<span class="title function_">setVisibilityFilter</span>(<span class="title class_">VisibilityFilters</span>.<span class="property">SHOW_COMPLETED</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">// 停止监听 state 更新</span></span><br><span class="line"><span class="title function_">unsubscribe</span>();</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="数据流"><a href="#数据流" class="headerlink" title="数据流"></a>数据流</h3><p><strong>严格的单项数据流</strong>是Redux架构的设计核心<br>应用数据生命周期遵循以下四个步骤：</p>
+<ol>
+<li>调用store.dispatch</li>
+<li>Redux store 调用传入的reducer函数</li>
+<li>根 reducer 应该把多个子 reducer 输出合并成一个单一的 state 树</li>
+<li>Redux store 保存了根 reducer 返回的完整 state 树</li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/search/">Search</a></li>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/archives/">writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li>
+         
+          <li><a href="/blog/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#React-Redux"><span class="toc-number">1.</span> <span class="toc-text">React-Redux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E5%A4%A7%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">三大核心概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E5%A4%A7%E5%8E%9F%E5%88%99"><span class="toc-number">1.2.</span> <span class="toc-text">三大原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Action"><span class="toc-number">1.3.</span> <span class="toc-text">Action</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reducer"><span class="toc-number">1.4.</span> <span class="toc-text">Reducer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Store"><span class="toc-number">1.5.</span> <span class="toc-text">Store</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B5%81"><span class="toc-number">1.6.</span> <span class="toc-text">数据流</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/12/03/React-Redux/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/12/03/React-Redux/&text=React-Redux(7)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/12/03/React-Redux/&title=React-Redux(7)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/12/03/React-Redux/&is_video=false&description=React-Redux(7)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=React-Redux(7)&body=Check out this article: https://benguanran.github.io/2022/12/03/React-Redux/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/12/03/React-Redux/&title=React-Redux(7)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/12/03/React-Redux/&title=React-Redux(7)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/12/03/React-Redux/&title=React-Redux(7)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/12/03/React-Redux/&title=React-Redux(7)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/12/03/React-Redux/&name=React-Redux(7)&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/12/03/React-Redux/&t=React-Redux(7)"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    BenGuanRan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/blog/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/blog/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+    <!-- jquery -->
+ 
+  
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+   
+    
+<script src="/blog/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

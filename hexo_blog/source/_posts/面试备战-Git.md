@@ -38,3 +38,12 @@ categories:
 - git merge将其他分支内容合并到当前分支
 - git reset用于回退版本
 - git revert回滚提交
+
+### git reset --hard XXX 恢复被抹除的版本
+思路是：可以使用git reflog命令查看想要恢复的分支版本号，然后在reset以下\
+
+### 巧妙使用git reset -- soft
+因为soft模式夏git保留当前工作区中的内容，因此当存在多次无意义的小commit时，可以soft reset到一个主要的commit，也就相当于合并commit
+
+### 撤销修改
+git checkout 文件名，可以将修改撤回到上一次add . 或commit的状态 

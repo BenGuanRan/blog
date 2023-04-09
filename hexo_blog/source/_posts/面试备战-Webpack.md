@@ -1,11 +1,11 @@
 ---
-title: 面试备战-Webpack
+title: Webpack
 date: 2022-11-12 00:03:54
 tags:
 - Webpack
 - 构建工具
-categories: 
-- 面试备战
+
+
 ---
 
 [webpack 中文文档 | webpack 中文网 (webpackjs.com)](https://www.webpackjs.com/)

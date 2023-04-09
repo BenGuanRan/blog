@@ -1,10 +1,10 @@
 ---
-title: 面试备战-JS
+title: JS
 date: 2022-11-11 00:03:54
 tags:
 - JS
-categories: 
-- 面试备战
+
+
 ---
 
 ## 类型转换

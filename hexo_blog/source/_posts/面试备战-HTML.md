@@ -1,10 +1,10 @@
 ---
-title: 面试备战-HTML
+title: HTML
 date: 2022-10-12 00:03:54
 tags:
 - HTML
-categories: 
-- 面试备战
+
+
 ---
 ## ****html标签的类型（head， body，！Doctype） 他们的作用是什么****
 

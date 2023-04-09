@@ -97,3 +97,49 @@ export default function App({ Component, pageProps }) {
 }
 ```
 **注意：全局css样式文件只能在_app.js文件中引入！！！**
+
+## 预渲染和数据获取
+### 什么是预渲染
+默认情况下，Next会对每个页面进行预渲染，也就是说Next为每个页面提前生成HTML，而不是像传统的框架那样，全部用js来实现，不利于SEO。
+也就是说一个html页面对应最小化确保交互的js代码。
+
+### 预渲染的两种形式
+
+两种形式：静态生成（Static Generation）、服务端渲染（Sever-side Rendering）
+SG是在打包时静态生成，然后预渲染的HTML在每个请求上重复使用。
+SSR是在每次向服务端请求后，再生成代码。
+
+![](https://secure2.wostatic.cn/static/pL5j3zq1UYkzn83rnEPZwz/1EFF175C-16DC-484B-8A05-720ADDE36F7C.png?auth_key=1679903860-rHggJm5Aj7eqiXJtkuKbhi-0-18a918fd04cfdc94244d6958da9d9d3a)
+
+适合静态生成的页面：不经常更新改变的页面
+适合服务端渲染的页面：每次请求，页面大概率改变
+### 有数据和无数据的静态生成
+
+**无数据的静态生成**
+直接构建就好
+
+**有数据的静态生成**
+也就是说静态生成之前必须要异步获取数据。
+其中有一个异步方法'getStaticProps'，将会在生产环境构建页面时运行。在这个方法中，可以去额外的数据，并通过props注入到组件中。
+getStaticProps代码不会返回给客户，因此，可以直接在getStaticProps代码中填写一些私密性代码，例如sql语句，等等。
+
+### 服务端渲染（SSR）
+[![ppsq1ds.md.png](https://s1.ax1x.com/2023/03/27/ppsq1ds.md.png)](https://imgse.com/i/ppsq1ds)
+
+关键函数`getServerSideProps`,区别于SG中的getStaticProps，前者是用于SSR，后者是用于SG，执行时间不一样。前者是每次请求执行，后者是构建时执行。
+```jsx
+export async function getServerSideProps(context) {
+  return {
+    props: {
+      // props for your component
+    }
+  }
+}
+```
+其中context包含特定的请求参数。getServerSideProps要比getStaticProps慢，因为服务器必须计算每个请求的结果，并且没有额外配置，CDN不会缓存。
+
+## 动态路由
+一个页面的路由取决于页面的内容（额外的数据）。↓
+[![ppsLvjO.md.png](https://s1.ax1x.com/2023/03/27/ppsLvjO.md.png)](https://imgse.com/i/ppsLvjO)
+
+**pages/posts/[id].js**这种形式的路径。

@@ -1,11 +1,11 @@
 ---
-title: 面试备战-Vite
+title: Vite
 date: 2022-11-12 00:03:54
 tags:
 - Vite
 - 构建工具
-categories: 
-- 面试备战
+
+
 ---
 
 ## 出现背景

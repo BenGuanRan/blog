@@ -1,11 +1,11 @@
 ---
-title: 面试备战-TS
+title: TS
 date: 2022-11-12 00:03:54
 tags:
 - TS
 - JS
-categories: 
-- 面试备战
+
+
 ---
 
 ## **声明数组**

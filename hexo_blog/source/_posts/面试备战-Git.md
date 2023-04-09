@@ -1,10 +1,10 @@
 ---
-title: 面试备战-Git
+title: Git
 date: 2022-11-12 00:03:54
 tags:
 - Git
-categories: 
-- 面试备战
+
+
 ---
 
 ### git工作流程

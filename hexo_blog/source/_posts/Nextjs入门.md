@@ -13,7 +13,7 @@ Nextjs的导航不同于React的配置式导航，是采用基于pages文件夹�
 / ----> /pages/index.js
 /a/1 ----> /pages/a/[id].js
 ### 路由跳转
-需要引入Next种的Link组件，来包裹a标签：
+需要引入Next中的Link组件，来包裹a标签：
 ```jsx
 import Link from 'next/link'
 
@@ -97,6 +97,11 @@ export default function App({ Component, pageProps }) {
 }
 ```
 **注意：全局css样式文件只能在_app.js文件中引入！！！**
+
+### 添加组件级CSS文件
+Next.js 通过 [name].module.css 文件命名约定来支持 CSS 模块 。
+通过这样命名可以将CSS文件限定在局部范围。从而可以在不同文件内部使用相同文件名，一次避免冲突。
+
 
 ## 预渲染和数据获取
 ### 什么是预渲染

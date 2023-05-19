@@ -1,8 +1,8 @@
 ---
-title: JS
+title: Js小总结
 date: 2022-11-11 00:03:54
 tags:
-- JS
+- Js
 
 
 ---

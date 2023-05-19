@@ -1,9 +1,9 @@
 ---
-title: TS
+title: Ts小总结
 date: 2022-11-12 00:03:54
 tags:
-- TS
-- JS
+- Ts
+- Ts
 
 
 ---

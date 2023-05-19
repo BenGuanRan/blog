@@ -9,6 +9,7 @@ date: 2022-11-22 16:38:37
 [Vue.js](https://cn.vuejs.org/)
 [React.js](https://react.docschina.org/)
 [React-Redux](https://www.redux.org.cn/)
+[Next.js](https://www.nextjs.cn/)
 ## 友情连接
 [Eruの兔叽窝](https://eruihniyhbkbnf.github.io/blog/)
 [阮一峰的网络日志](https://ruanyifeng.com/blog/)

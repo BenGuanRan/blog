@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="前言什么是web前端性能？简而言之就是：网页在浏览器中下载，呈现以及交互的流畅程度。之前的文章有谈到过那些老生常谈的问题：输入URL到页面加载发生了什么、浏览器渲染原理。了解这些有助于之后的理解。本文参考：https:&#x2F;&#x2F;juejin.cn&#x2F;post&#x2F;6967156013464027143 前端的一些性能指标 12345678FCP（First Contentful Paint）白屏时间，值越低越">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端性能指标">
+<meta property="og:url" content="https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/index.html">
+<meta property="og:site_name" content="BenGuanRan&#39;s Blog">
+<meta property="og:description" content="前言什么是web前端性能？简而言之就是：网页在浏览器中下载，呈现以及交互的流畅程度。之前的文章有谈到过那些老生常谈的问题：输入URL到页面加载发生了什么、浏览器渲染原理。了解这些有助于之后的理解。本文参考：https:&#x2F;&#x2F;juejin.cn&#x2F;post&#x2F;6967156013464027143 前端的一些性能指标 12345678FCP（First Contentful Paint）白屏时间，值越低越">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s1.ax1x.com/2023/04/10/ppq9SfO.png">
+<meta property="article:published_time" content="2023-04-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-04-11T03:24:02.997Z">
+<meta property="article:author" content="BenGuanRan">
+<meta property="article:tag" content="性能优化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2023/04/10/ppq9SfO.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>前端性能指标</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/blog/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/blog/2023/03/23/Nextjs%E5%85%A5%E9%97%A8/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&text=前端性能指标"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&title=前端性能指标"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&is_video=false&description=前端性能指标"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=前端性能指标&body=Check out this article: https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&title=前端性能指标"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&title=前端性能指标"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&title=前端性能指标"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&title=前端性能指标"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&name=前端性能指标&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&t=前端性能指标"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="toc-number">2.</span> <span class="toc-text">前端的一些性能指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FCP%EF%BC%88First-Contentful-Paint%EF%BC%89%E9%A6%96%E6%AC%A1%E5%86%85%E5%AE%B9%E6%B8%B2%E6%9F%93"><span class="toc-number">2.1.</span> <span class="toc-text">FCP（First Contentful Paint）首次内容渲染</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SI%EF%BC%88Speed-Index%EF%BC%89%E9%A1%B5%E9%9D%A2%E5%86%85%E5%AE%B9%E5%91%88%E7%8E%B0%E9%80%9F%E5%BA%A6"><span class="toc-number">2.2.</span> <span class="toc-text">SI（Speed Index）页面内容呈现速度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LCP%EF%BC%88Largest-Contentful-Paint%EF%BC%89%E6%9C%80%E5%A4%A7%E5%86%85%E5%AE%B9%E6%B8%B2%E6%9F%93%E9%80%9F%E5%BA%A6"><span class="toc-number">2.3.</span> <span class="toc-text">LCP（Largest Contentful Paint）最大内容渲染速度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TTI%EF%BC%88Time-to-Interactive%EF%BC%89%E7%94%A8%E6%88%B7%E5%8F%AF%E4%BA%A4%E4%BA%92%E9%80%9F%E5%BA%A6"><span class="toc-number">2.4.</span> <span class="toc-text">TTI（Time to Interactive）用户可交互速度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CLS%EF%BC%88Cumulative-Layout-Shift%EF%BC%89"><span class="toc-number">2.5.</span> <span class="toc-text">CLS（Cumulative Layout Shift）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FID%EF%BC%88First-Input-Delay%EF%BC%89%E9%A6%96%E6%AC%A1%E4%BA%A4%E4%BA%92%E5%BB%B6%E8%BF%9F"><span class="toc-number">2.6.</span> <span class="toc-text">FID（First Input Delay）首次交互延迟</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TBT%EF%BC%88Total-Blocking-Time%EF%BC%89%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E9%98%BB%E5%A1%9E%E6%97%B6%E9%97%B4"><span class="toc-number">2.7.</span> <span class="toc-text">TBT（Total Blocking Time）用户行为阻塞时间</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Yahoo35%E6%9D%A1%E5%86%9B%E8%A7%84"><span class="toc-number">3.</span> <span class="toc-text">Yahoo35条军规</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        前端性能指标
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">BenGuanRan</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-04-08T16:00:00.000Z" itemprop="datePublished">2023-04-09</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" rel="tag">性能优化</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><strong>什么是web前端性能？</strong><br>简而言之就是：网页在浏览器中下载，呈现以及交互的流畅程度。<br>之前的文章有谈到过那些老生常谈的问题：输入URL到页面加载发生了什么、浏览器渲染原理。<br>了解这些有助于之后的理解。<br>本文参考：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6967156013464027143">https://juejin.cn/post/6967156013464027143</a></p>
+<h2 id="前端的一些性能指标"><a href="#前端的一些性能指标" class="headerlink" title="前端的一些性能指标"></a>前端的一些性能指标</h2><p><a target="_blank" rel="noopener" href="https://imgse.com/i/ppq9SfO"><img src="https://s1.ax1x.com/2023/04/10/ppq9SfO.png" alt="ppq9SfO.png"></a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FCP（First Contentful Paint）白屏时间，值越低越好；</span><br><span class="line">SI（Speed Index）页面渲染时间，值越低越好；</span><br><span class="line">LCP（Largest Contentful Paint）可视窗口最大内容渲染时间，值越低越好</span><br><span class="line">TTI（Time to Interactive）用户可交互时间，值越低越好；</span><br><span class="line">TBT（Total Blocking Time）用户行为阻塞时间，值越低越好；</span><br><span class="line">CLS（Cumulative Layout Shift）可视窗口中累计可见元素布局偏移；</span><br><span class="line">FID（First Input Delay）用户首次交互时间，值越低越好</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="FCP（First-Contentful-Paint）首次内容渲染"><a href="#FCP（First-Contentful-Paint）首次内容渲染" class="headerlink" title="FCP（First Contentful Paint）首次内容渲染"></a>FCP（First Contentful Paint）首次内容渲染</h3><p>白屏时间指的是用户在浏览器中打开页面到渲染第一个DOM元素所花费的时间，DOM元素包括图片，非空白canvas，SVG等元素，不包括iframe中的元素。<br>建议阈值：<code>优 1.8s 良 3.0s 差 </code><br><strong>优化策略</strong></p>
+<ol>
+<li>DNS解析优化</li>
+<li>服务端处理优化：例如GZIP压缩等</li>
+<li>CND加速</li>
+<li>精简DOM结构，合理压缩静态资源文件</li>
+<li>字体加载优化：font-display属性</li>
+</ol>
+<h3 id="SI（Speed-Index）页面内容呈现速度"><a href="#SI（Speed-Index）页面内容呈现速度" class="headerlink" title="SI（Speed Index）页面内容呈现速度"></a>SI（Speed Index）页面内容呈现速度</h3><p>与其他页面加载时间指标（如首次内容呈现时间、最大可见元素延迟时间）不同，SI 是一种综合指标，它考虑了页面的整体渲染速度。具体来说，SI 是通过计算页面加载过程中每个时刻屏幕上显示的像素数量的平均值来确定的。SI 越低，表示页面内容的呈现速度越快，用户体验越好。</p>
+<p><strong>优化策略</strong></p>
+<ol>
+<li>优化主进程，包括解析和执行阶段。</li>
+<li>利用webworker进行复杂计算</li>
+<li>减少复杂的样式计算和嵌套</li>
+<li>避免复杂的布局回流</li>
+<li>异步加载非必须的CSS</li>
+</ol>
+<h3 id="LCP（Largest-Contentful-Paint）最大内容渲染速度"><a href="#LCP（Largest-Contentful-Paint）最大内容渲染速度" class="headerlink" title="LCP（Largest Contentful Paint）最大内容渲染速度"></a>LCP（Largest Contentful Paint）最大内容渲染速度</h3><p>LCP 时间是指最大内容元素呈现在屏幕上的时间。它反映了页面呈现的速度，因为最大内容元素通常是页面中最具代表性的元素。LCP 时间越短，页面的视觉稳定性和用户体验就越好。<strong>注意：这里的大小指的是尺寸的大下，而非数据的内存的大小。</strong><br><strong>哪些元素可能是最大的？</strong></p>
+<ul>
+<li>图片</li>
+<li>网络请求资源</li>
+<li>包含文本节点的块级元素<br>建议阈值：<code>优 2.5s 良 4.0s 差 </code><br><strong>优化策略</strong><br>LCP 的优化通常需要改善页面加载速度和响应性能，例如通过优化图像大小和压缩，优化代码和减少HTTP请求等。因此，通过优化 LCP 可以显著提高页面的性能和用户体验。</li>
+</ul>
+<h3 id="TTI（Time-to-Interactive）用户可交互速度"><a href="#TTI（Time-to-Interactive）用户可交互速度" class="headerlink" title="TTI（Time to Interactive）用户可交互速度"></a>TTI（Time to Interactive）用户可交互速度</h3><p>TTI（Time to Interactive）是一个重要的页面加载性能指标，用于衡量用户可以与页面进行交互的时间。它表示从页面开始加载到页面变得交互式所需的时间，通常以秒（s）为单位进行测量。</p>
+<p>TTI 是一个非常关键的指标，因为它反映了用户可以开始与页面进行交互的时间。用户往往会因为长时间等待页面加载而感到沮丧，因此通过优化 TTI 可以显著提高页面的用户体验。</p>
+<p><strong>优化策略</strong></p>
+<ol>
+<li>加载采用PRPL模式<ul>
+<li>Push (or preload) the most important resources.</li>
+<li>Render the initial route as soon as possible.</li>
+<li>Pre-cache remaining assets.</li>
+<li>Lazy load other routes and non-critical assets.</li>
+</ul>
+</li>
+<li>压缩资源，确保js先执行</li>
+<li>减少因代码割裂导致的依赖</li>
+</ol>
+<h3 id="CLS（Cumulative-Layout-Shift）"><a href="#CLS（Cumulative-Layout-Shift）" class="headerlink" title="CLS（Cumulative Layout Shift）"></a>CLS（Cumulative Layout Shift）</h3><p>CLS（Cumulative Layout Shift）是一个页面渲染稳定性指标，用于衡量页面加载过程中内容变化的程度。CLS 表示页面上元素位置变化的累计量，通常用数值表示。<br>CLS 是一个非常重要的指标，因为它可以帮助开发人员和网站管理员了解页面的视觉稳定性，并改善用户体验。如果页面加载过程中出现频繁的内容移动或跳动，用户可能会感到困惑或失望，影响他们对网站的信任和忠诚度。<br>通常，CLS 可以通过各种性能测试工具（如Google Lighthouse和WebPageTest）来测量。这些工具可以生成报告，显示页面的 CLS 值以及其他性能指标，以帮助开发人员和网站管理员优化其网站的性能和用户体验。<br>建议阈值：<code>优 0.1良 0.25 差 </code> </p>
+<p><strong>优化策略</strong></p>
+<ol>
+<li>给页面元素设置固定的大小和位置</li>
+<li>预留图像和视频的空间，避免它们加载时造成页面布局的变化</li>
+<li>避免在页面上插入动态内容，例如广告或跟踪脚本</li>
+<li>避免使用字体或图标库，因为它们可能会在加载时造成页面元素的变化。</li>
+</ol>
+<h3 id="FID（First-Input-Delay）首次交互延迟"><a href="#FID（First-Input-Delay）首次交互延迟" class="headerlink" title="FID（First Input Delay）首次交互延迟"></a>FID（First Input Delay）首次交互延迟</h3><p>它衡量的是用户首次与页面交互（例如点击链接、按钮或输入框）到页面响应该交互的时间差。FID 的单位通常是毫秒（ms）。<br>建议阈值：<code>优 100ms 良 300ms 差 </code> </p>
+<p><strong>优化策略</strong></p>
+<ol>
+<li>最小化JavaScript文件大小和数量，以加快脚本执行速度</li>
+<li>避免在主线程上执行长时间运行的任务，例如计算和解析数据</li>
+<li>使用 Web Worker 将这些任务从主线程移除</li>
+<li>避免使用阻塞渲染的第三方脚本</li>
+<li>最小化网络请求并使用HTTP&#x2F;2等协议来加快加载时间</li>
+</ol>
+<h3 id="TBT（Total-Blocking-Time）用户行为阻塞时间"><a href="#TBT（Total-Blocking-Time）用户行为阻塞时间" class="headerlink" title="TBT（Total Blocking Time）用户行为阻塞时间"></a>TBT（Total Blocking Time）用户行为阻塞时间</h3><p>也就是说页面FCP首次内容绘制到TTI用户可交互的时间，也就是FCP到TTI之间所有长任务阻塞的时间总和。<br>TBT（Total Blocking Time）是一个衡量页面响应速度的指标，它与页面的 FID（First Input Delay）指标密切相关。TBT 表示在页面主线程被阻塞的总时间，这些阻塞通常是由长时间运行的 JavaScript 代码或者其他资源加载等导致的。TBT 的单位通常是毫秒（ms）。</p>
+<p><strong>优化策略</strong></p>
+<ol>
+<li>最小化 JavaScript 文件大小和数量，以加快脚本执行速度</li>
+<li>避免在主线程上执行长时间运行的任务，例如计算和解析数据</li>
+<li>使用 Web Worker 将这些任务从主线程移除</li>
+<li>避免使用阻塞渲染的第三方脚本</li>
+<li>最小化网络请求并使用 HTTP&#x2F;2 等协议来加快加载时间</li>
+</ol>
+<h2 id="Yahoo35条军规"><a href="#Yahoo35条军规" class="headerlink" title="Yahoo35条军规"></a>Yahoo35条军规</h2><ul>
+<li>尽量减少HTTP请求数</li>
+<li>合并文件、CSS Sprites、行内图片</li>
+<li>减少DNS查找</li>
+<li>避免重定向</li>
+<li>让Ajax可缓存</li>
+<li>延迟加载组件</li>
+<li>预加载组件（无条件预加载、条件性预加载、提前预加载）</li>
+<li>减少DOM元素的数量（700以内HTML标签）</li>
+<li>跨域分离组件（静态分离，同域名并行下载一般不能超过6条）</li>
+<li>尽量少用iframe</li>
+<li>杜绝404</li>
+<li>把样式表放在顶部；</li>
+<li>避免使用CSS表达式；</li>
+<li>选择舍弃@import；</li>
+<li>避免使用滤镜；</li>
+<li>去除重复脚本；</li>
+<li>尽量减少DOM访问（缓存已访问过的元素的索引先“离线”更新节点，再把它们添到DOM树上，避免用JavaScript修复布局问题）；</li>
+<li>用智能的事件处理器（比如DOMContentLoaded 代替load，合理使用事件委托）；</li>
+<li>把脚本放在底部，合理使用defer，async异步加载；</li>
+<li>把JavaScript和CSS放到外面；</li>
+<li>压缩JavaScript和CSS</li>
+<li>优化图片；</li>
+<li>优化CSS Sprite；</li>
+<li>不要用HTML缩放图片；</li>
+<li>用小的可缓存的favicon.ico（越小越好，一定要有，否则会造成404）；</li>
+<li>给Cookie减肥（清除不必要的cookie、保持合理大小，合理域名、有效期）；</li>
+<li>把组件放在不含cookie的域下；</li>
+<li>保证所有组件都小于25K；</li>
+<li>把组件打包到一个复合文档里；</li>
+<li>Gzip组件；</li>
+<li>避免图片src属性为空；</li>
+<li>配置ETags（服务器）</li>
+<li>对Ajax用GET请求（服务器）；</li>
+<li>尽早清空缓冲区（服务器）；</li>
+<li>使用CDN(Content Delivery Network)；</li>
+<li>添上Expires或者Cache-Control HTTP头</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/search/">Search</a></li>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/archives/">writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li>
+         
+          <li><a href="/blog/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="toc-number">2.</span> <span class="toc-text">前端的一些性能指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FCP%EF%BC%88First-Contentful-Paint%EF%BC%89%E9%A6%96%E6%AC%A1%E5%86%85%E5%AE%B9%E6%B8%B2%E6%9F%93"><span class="toc-number">2.1.</span> <span class="toc-text">FCP（First Contentful Paint）首次内容渲染</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SI%EF%BC%88Speed-Index%EF%BC%89%E9%A1%B5%E9%9D%A2%E5%86%85%E5%AE%B9%E5%91%88%E7%8E%B0%E9%80%9F%E5%BA%A6"><span class="toc-number">2.2.</span> <span class="toc-text">SI（Speed Index）页面内容呈现速度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LCP%EF%BC%88Largest-Contentful-Paint%EF%BC%89%E6%9C%80%E5%A4%A7%E5%86%85%E5%AE%B9%E6%B8%B2%E6%9F%93%E9%80%9F%E5%BA%A6"><span class="toc-number">2.3.</span> <span class="toc-text">LCP（Largest Contentful Paint）最大内容渲染速度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TTI%EF%BC%88Time-to-Interactive%EF%BC%89%E7%94%A8%E6%88%B7%E5%8F%AF%E4%BA%A4%E4%BA%92%E9%80%9F%E5%BA%A6"><span class="toc-number">2.4.</span> <span class="toc-text">TTI（Time to Interactive）用户可交互速度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CLS%EF%BC%88Cumulative-Layout-Shift%EF%BC%89"><span class="toc-number">2.5.</span> <span class="toc-text">CLS（Cumulative Layout Shift）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FID%EF%BC%88First-Input-Delay%EF%BC%89%E9%A6%96%E6%AC%A1%E4%BA%A4%E4%BA%92%E5%BB%B6%E8%BF%9F"><span class="toc-number">2.6.</span> <span class="toc-text">FID（First Input Delay）首次交互延迟</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TBT%EF%BC%88Total-Blocking-Time%EF%BC%89%E7%94%A8%E6%88%B7%E8%A1%8C%E4%B8%BA%E9%98%BB%E5%A1%9E%E6%97%B6%E9%97%B4"><span class="toc-number">2.7.</span> <span class="toc-text">TBT（Total Blocking Time）用户行为阻塞时间</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Yahoo35%E6%9D%A1%E5%86%9B%E8%A7%84"><span class="toc-number">3.</span> <span class="toc-text">Yahoo35条军规</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&text=前端性能指标"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&title=前端性能指标"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&is_video=false&description=前端性能指标"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=前端性能指标&body=Check out this article: https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&title=前端性能指标"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&title=前端性能指标"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&title=前端性能指标"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&title=前端性能指标"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&name=前端性能指标&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/&t=前端性能指标"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    BenGuanRan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/blog/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/blog/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+    <!-- jquery -->
+ 
+  
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+   
+    
+<script src="/blog/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="基本概念衡量计算机性能的指标：  速率 吞吐量 带宽 时延：指数据从网络一端传送到另一端所用的时间 发送时延（传输时延）：发送数据全部进入信道所用的时间（机器内部） 传播时延：数据在信道上传输所占用的时间（信道上） 排队时延：分组在排队等待路由分发时所消耗的时间 处理时延：路由器或主机在接收到数据包后处理数据所用的时间    OSI参考模型0   其中前三层主要是由物理链路组成的，5 6 7 这三">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络">
+<meta property="og:url" content="https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/index.html">
+<meta property="og:site_name" content="BenGuanRan&#39;s Blog">
+<meta property="og:description" content="基本概念衡量计算机性能的指标：  速率 吞吐量 带宽 时延：指数据从网络一端传送到另一端所用的时间 发送时延（传输时延）：发送数据全部进入信道所用的时间（机器内部） 传播时延：数据在信道上传输所占用的时间（信道上） 排队时延：分组在排队等待路由分发时所消耗的时间 处理时延：路由器或主机在接收到数据包后处理数据所用的时间    OSI参考模型0   其中前三层主要是由物理链路组成的，5 6 7 这三">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3mWVK.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3mHKI.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3mzGQ.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3nPrq.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3nMs1.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3n8IO.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3nNzd.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3nwLt.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3nDdf.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3ncWQ.png">
+<meta property="article:published_time" content="2022-11-05T16:03:54.000Z">
+<meta property="article:modified_time" content="2023-04-09T05:43:02.894Z">
+<meta property="article:author" content="BenGuanRan">
+<meta property="article:tag" content="计算机网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2022/11/22/z3mWVK.md.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>计算机网络</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/blog/2022/11/11/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-JS/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/blog/2022/10/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-HTML/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&text=计算机网络"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&title=计算机网络"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&is_video=false&description=计算机网络"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=计算机网络&body=Check out this article: https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&title=计算机网络"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&title=计算机网络"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&title=计算机网络"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&title=计算机网络"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&name=计算机网络&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&t=计算机网络"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP"><span class="toc-number">2.</span> <span class="toc-text">HTTP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E7%89%B9%E7%82%B9"><span class="toc-number">2.1.</span> <span class="toc-text">HTTP特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E7%BC%BA%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">HTTP缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%B7%E5%A7%8B%E8%A1%8C"><span class="toc-number">2.3.</span> <span class="toc-text">起始行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%B4%E9%83%A8"><span class="toc-number">2.4.</span> <span class="toc-text">头部</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A9%BA%E8%A1%8C"><span class="toc-number">2.5.</span> <span class="toc-text">空行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E4%BD%93"><span class="toc-number">2.6.</span> <span class="toc-text">实体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95"><span class="toc-number">2.7.</span> <span class="toc-text">请求方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GET%E5%92%8CPOST%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">2.8.</span> <span class="toc-text">GET和POST的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E7%A0%81"><span class="toc-number">2.9.</span> <span class="toc-text">状态码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#URI"><span class="toc-number">3.</span> <span class="toc-text">URI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%B4%E9%83%A8%E5%AD%97%E6%AE%B5"><span class="toc-number">3.1.</span> <span class="toc-text">头部字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">3.2.</span> <span class="toc-text">两种表单提交的方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%9F%E5%A4%B4%E9%98%BB%E5%A1%9E%E9%97%AE%E9%A2%98"><span class="toc-number">3.3.</span> <span class="toc-text">队头阻塞问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP1-0%E5%92%8C1-1%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">3.4.</span> <span class="toc-text">HTTP1.0和1.1的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP1-1%E5%92%8C2-0%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">3.5.</span> <span class="toc-text">HTTP1.1和2.0的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5%E7%BD%91%E5%9D%80%E4%B9%8B%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-number">3.6.</span> <span class="toc-text">浏览器输入网址之后发生了什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP-x2F-IP%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.7.</span> <span class="toc-text">TCP&#x2F;IP协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP%E5%92%8CUDP%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">4.</span> <span class="toc-text">TCP和UDP协议的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E9%87%8D%E4%BC%A0%E6%9C%BA%E5%88%B6"><span class="toc-number">4.1.</span> <span class="toc-text">TCP重传机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="toc-number">4.2.</span> <span class="toc-text">三次握手</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        计算机网络
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">BenGuanRan</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-11-05T16:03:54.000Z" itemprop="datePublished">2022-11-06</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>衡量计算机性能的指标：</p>
+<ul>
+<li>速率</li>
+<li>吞吐量</li>
+<li>带宽</li>
+<li>时延：指数据从网络一端传送到另一端所用的时间<ul>
+<li>发送时延（传输时延）：发送数据全部进入信道所用的时间（机器内部）</li>
+<li>传播时延：数据在信道上传输所占用的时间（信道上）</li>
+<li>排队时延：分组在排队等待路由分发时所消耗的时间</li>
+<li>处理时延：路由器或主机在接收到数据包后处理数据所用的时间</li>
+</ul>
+</li>
+</ul>
+<p>OSI参考模型0 </p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3mWVK"><img src="https://s1.ax1x.com/2022/11/22/z3mWVK.md.png" alt="z3mWVK.md.png"></a></p>
+<p>其中前三层主要是由物理链路组成的，5 6 7 这三层则是由软件（协议）控制的</p>
+<ul>
+<li><p><strong>物理层</strong></p>
+<p>  物理层主要负责规定了电气特性，比如光纤，有光脉冲表示1，无表示0.</p>
+<p>  物理层设备需要中继器，这是为了保证数据传输的稳定性，解决信号衰减、信号失真的问题。中继器会对信号进行再生和还原，增加了信号传输的距离。</p>
+</li>
+<li><p><strong>数据链路层</strong></p>
+<ul>
+<li>封装成帧：将网络信号封装成数据包，在链路层就叫数据帧。</li>
+<li>透明传输：由于链路层会将网络信号添加首部和尾部进行封装，那比如传输的内容和待封装的首部信息一样，那么网络层进行解析就可能搞混乱，因此需要采取一定的措施，让接收方不被误导。（类似js的转义字符<br>这个是标签还是普通字符串）</li>
+<li>差错控制：确保数据传输不会出错</li>
+<li>流量控制：注意，TCP也有流量控制，TCP是端到端的流量控制，链路层是点到点的流量控制。（滑动窗口协议、选择重传协议）</li>
+</ul>
+</li>
+<li><p><strong>网络层</strong></p>
+<p>  网络层主要是将分组从一台主机移动到另一台主机</p>
+<p>  分组交换就是：当<code>主机H1</code>要向另一<code>主机H2</code>发送数据（报文）时，首先将数据划分成若干个<code>等长的分组</code>，然后将这些分组一个接一个地发往里与H1相联的<code>路由A</code> ,当<code>A</code>接到分组后，先放入缓冲区，再按一定的路由算法确定该分组下一步将发注哪个结点，如此一个结点一个结点传递，直到<code>最终目的H2</code>。</p>
+<p>  数据报：是通过网络传输的数据的基本格式</p>
+</li>
+<li><p><strong>传输层</strong></p>
+<p>  传输层是面向计算机进程之间的，端对端的</p>
+<p>  传输层主要协议分为</p>
+<ul>
+<li>UDP 用户数据报协议（无连接）</li>
+<li>TCP 传输控制协议（面向连接）</li>
+</ul>
+<p>  端口：用来找到计算机上运行的各个进程，数值为16位 0-65535</p>
+<p>  端口的分类：</p>
+<ul>
+<li>服务器使用的端口号<ul>
+<li>熟知端口号（系统端口号）0-1023，这些端口号被指派给TCP&#x2F;IP协议下的重要的应用程序。</li>
+<li>登记端口号，这些端口号使用前需要在IANA按照规定的手续进行办理。 1024-49151</li>
+</ul>
+</li>
+<li>客户端使用的端口号 49152-65535 短暂端口号，这类端口号留给进程进行短暂的使用。</li>
+</ul>
+<p>  <strong>UDP</strong></p>
+</li>
+</ul>
+<h2 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h2><p>底层是TCP协议，确保数据传输的准确性（顺序正确，没有丢包）三次握手四次挥手</p>
+<p><strong>http报文结构包括：起始行+头部+空行+实体</strong></p>
+<ul>
+<li>简单快速</li>
+<li>灵活：允许任意类型的数据对象</li>
+<li>无状态性</li>
+</ul>
+<h3 id="HTTP特点"><a href="#HTTP特点" class="headerlink" title="HTTP特点"></a>HTTP特点</h3><ol>
+<li><p>灵活可扩展：</p>
+<p> 语法限制较为宽泛</p>
+<p> 传输形式多样</p>
+</li>
+<li><p>可靠传输：</p>
+<p> HTTP基于TCP&#x2F;IP，因此更可靠。</p>
+</li>
+<li><p>请求响应：</p>
+<p> 有来有回</p>
+</li>
+<li><p>无状态：</p>
+<p> 无法记录状态信息</p>
+</li>
+</ol>
+<h3 id="HTTP缺点"><a href="#HTTP缺点" class="headerlink" title="HTTP缺点"></a>HTTP缺点</h3><ol>
+<li><p>无状态：</p>
+<p> 主要分场景来看的，在需要长连接场景中，需要保存大量的上下文信息，以免传输大量重复的信息，这时无状态就是HTTP的缺点了。</p>
+<p> 当不需要状态时,大大节省了网络开销，反而是优点。</p>
+</li>
+<li><p>明文传输：</p>
+<p> 比如WIFI陷阱，就是通过HTTP明文传输的性质，疯狂抓取用户信息。</p>
+</li>
+<li><p>队头阻塞问题</p>
+</li>
+</ol>
+<h3 id="起始行"><a href="#起始行" class="headerlink" title="起始行"></a>起始行</h3><p>对于请求报文</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">GET</span> /login <span class="variable constant_">HTTP</span>/<span class="number">1.1</span></span><br></pre></td></tr></table></figure>
+
+<p>响应报文</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">HTTP</span>/<span class="number">1.1</span> <span class="number">200</span> <span class="variable constant_">OK</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="头部"><a href="#头部" class="headerlink" title="头部"></a>头部</h3><p>请求头&#x2F;响应头</p>
+<ul>
+<li>大小写不敏感</li>
+<li>字段名不允许出现_或空格</li>
+<li>字段名后面必须接 :</li>
+</ul>
+<h3 id="空行"><a href="#空行" class="headerlink" title="空行"></a>空行</h3><p>用来区分头部和实体</p>
+<p>如果在头部之间故意加一个空行：</p>
+<p>那么空行后的内容会被认为是实体</p>
+<h3 id="实体"><a href="#实体" class="headerlink" title="实体"></a>实体</h3><p>请求体+响应体</p>
+<h3 id="请求方法"><a href="#请求方法" class="headerlink" title="请求方法"></a>请求方法</h3><p><strong>八种</strong></p>
+<ul>
+<li>GET：通常用于获取资源（GET不能对服务器产生副作用）</li>
+<li>POST：向服务器提交数据</li>
+<li>PUT：与POST相似，但是侧重修改</li>
+<li>OPTIONS：列出对特定资源的服务器支持的请求方法</li>
+<li>HEAD：只返回接口的首部</li>
+<li>DELETE：删除资源（很少用到）</li>
+<li>TRACE：追踪请求，常常用于测试</li>
+<li>CONNECT：代理</li>
+</ul>
+<h3 id="GET和POST的区别"><a href="#GET和POST的区别" class="headerlink" title="GET和POST的区别"></a>GET和POST的区别</h3><ul>
+<li><strong>缓存角度：GET会被浏览器缓存，但是POST默认不会</strong></li>
+<li><strong>编码角度：GET只进行URL编码，只支持ASKCII</strong></li>
+<li><strong>参数角度：GET参数外露，不利于进行敏感信息传输</strong></li>
+<li><strong>幂等角度：GET是幂等的，基执行相同操作，结果依然相同</strong></li>
+<li><strong>TCP角度：GET往往是一个数据包发出，而POST一个或两个，依据不同浏览器而定</strong></li>
+<li><strong>爬虫角度：GET会被网络蜘蛛直接访问，因此，不应将不利于服务器的操作用于GET协议。</strong></li>
+</ul>
+<h3 id="状态码"><a href="#状态码" class="headerlink" title="状态码"></a>状态码</h3><ul>
+<li><p><strong>1XX：表示目前协议处理处于中间状态，还需要后续操作。</strong></p>
+<p>  <strong>101</strong> 在HTTP协议准备升级到WS协议时，如果服务器同意变更，则会发送状态码101.</p>
+<p>  <strong>100 continue</strong> </p>
+</li>
+<li><p><strong>2XX：表示成功状态。</strong></p>
+<p>  <strong>200 OK</strong> 成功返回数据，并存在响应体。</p>
+<p>  <strong>204 No Content</strong> 成功返回，但是没有响应体。</p>
+<p>  <strong>206 Partial Content</strong> 返回部分内容，往往适用于分块下载和断点续传，当然·也会带上相应字段Content-Range</p>
+</li>
+<li><p><strong>3XX：重定向状态，资源位置发生变动，需要重新进行请求。</strong></p>
+<p>  <strong>301 Moved Permanently</strong> 永久重定向：网站会做缓存优化，下次再访问则直接跳转到重定向的那个网址。</p>
+<p>  <strong>302 Found</strong> 临时重定向：有网站劫持的风险</p>
+<p>  <strong>304：</strong>当协商缓存命中时会返回这个状态码。</p>
+</li>
+<li><p><strong>4XX：请求报文有误。</strong></p>
+<p>  <a target="_blank" rel="noopener" href="https://imgse.com/i/z3mHKI"><img src="https://s1.ax1x.com/2022/11/22/z3mHKI.png" alt="z3mHKI.png"></a></p>
+</li>
+<li><p><strong>5XX：服务端发生错误。</strong></p>
+<p>  <a target="_blank" rel="noopener" href="https://imgse.com/i/z3mzGQ"><img src="https://s1.ax1x.com/2022/11/22/z3mzGQ.png" alt="z3mzGQ.png"></a></p>
+</li>
+</ul>
+<h2 id="URI"><a href="#URI" class="headerlink" title="URI"></a>URI</h2><p><strong>URL+URE</strong></p>
+<p>仅支持ASCII码，所有不支持的将被转化为16进制字节值</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3nPrq"><img src="https://s1.ax1x.com/2022/11/22/z3nPrq.png" alt="z3nPrq.png"></a></p>
+<h3 id="头部字段"><a href="#头部字段" class="headerlink" title="头部字段"></a>头部字段</h3><ul>
+<li><p><strong>Accept（请求头）</strong></p>
+<p>  用于告知发送方，你支持什么样的接收方式 </p>
+<p>  Accept字段常用的功能有如下四个部分：</p>
+<p>  数据格式、压缩方式、支持语言、字符集</p>
+</li>
+<li><p><strong>Content（响应头）</strong></p>
+<p>  <strong>定长字段</strong></p>
+<p>  Content-Length</p>
+<p>  必须完全符合所发送的字符长度，过长则无法返回，过短则字符串被截取</p>
+<p>  <strong>不定长字段</strong></p>
+<p>  Transfer-Encoding: chunked</p>
+<p>  表示分块传输数据，设置这个字段后Content-Length字段会被自动忽略，基于长连接持续推送动态内容。</p>
+</li>
+</ul>
+<h3 id="两种表单提交的方式"><a href="#两种表单提交的方式" class="headerlink" title="两种表单提交的方式"></a>两种表单提交的方式</h3><ul>
+<li><p>x-www-form-urlencoded</p>
+<p>  其中的数据会被编码成以&amp;分割的键值对</p>
+<p>  字符以URL编码方式编写</p>
+</li>
+<li><p>multipart&#x2F;form-data</p>
+<p>  将不同的表单元素拆分开，且每个单元浏览器会自动添加特定的boundary，对于文件、图片等资源的上传，因为没有必要做URL编码，因此减少消耗，减小占用空间按</p>
+</li>
+</ul>
+<h3 id="队头阻塞问题"><a href="#队头阻塞问题" class="headerlink" title="队头阻塞问题"></a>队头阻塞问题</h3><p>HTTP从1.0版本升级到1.1版本之后，改变了每次请求都需要三次握手四次挥手的繁琐操作，HTTP1.1采用<strong>管道化的方式，允许客户端在已发送请求之后，响应请求之前发送下一个请求</strong>，借此来减少等待时间和吞吐量。</p>
+<p>但是由于管道化的特定需求，服务端响应顺序必须与发送端相对应（FIFO）</p>
+<p><strong>支持管道化的请求必须是幂等请求（GET、OPTION）</strong></p>
+<p>解决办法：</p>
+<ol>
+<li>并发连接，以chrom为例，一个域名下可以存在多个长连接，只需要增加队列数目来解决</li>
+<li>可以采用域名分片，将域名分出多个二级域名</li>
+</ol>
+<h3 id="HTTP1-0和1-1的区别"><a href="#HTTP1-0和1-1的区别" class="headerlink" title="HTTP1.0和1.1的区别"></a>HTTP1.0和1.1的区别</h3><ul>
+<li>连接方面： http1.0 默认使用非持久连接，而 http1.1 默认使用持久连接。http1.1 通过使用持久连接来使多个 http 请求复用同一个 TCP 连接，以此来避免使用非持久连接时每次需要建立连接的时延。</li>
+<li>资源请求方面：在 http1.0 中，存在一些浪费带宽的现象，例如客户端只是需要某个对象的一部分，而服务器却将整个对象送过来了，并且不支持断点续传功能，http1.1 则在请求头引入了 range 头域，它允许只请求资源的某个部分，即返回码是 206（Partial Content），这样就方便了开发者自由的选择以便于充分利用带宽和连接。</li>
+<li><strong>缓存方面</strong>，在 http1.0 中主要使用 header 里的 If-Modified-Since、Expires 来做为缓存判断的标准，http1.1 则引入了更多的缓存控制策略，例如 Etag、If-Unmodified-Since、If-Match、If-None-Match 等更多可供选择的缓存头来控制缓存策略。</li>
+<li>新增了请求方法</li>
+<li>host字段</li>
+</ul>
+<h3 id="HTTP1-1和2-0的区别"><a href="#HTTP1-1和2-0的区别" class="headerlink" title="HTTP1.1和2.0的区别"></a>HTTP1.1和2.0的区别</h3><ul>
+<li>二进制协议</li>
+<li>多路复用</li>
+<li>数据流</li>
+<li>头信息压缩</li>
+<li>服务器推送</li>
+</ul>
+<h3 id="浏览器输入网址之后发生了什么"><a href="#浏览器输入网址之后发生了什么" class="headerlink" title="浏览器输入网址之后发生了什么"></a>浏览器输入网址之后发生了什么</h3><p>解析URL→查找缓存→DNS→获取MAC地址→TCP三次握手→HTTPS握手(TLS四次握手)→返回数据→解析页面→TCP四次挥手</p>
+<p><strong>TLS加密原理（先非对称后对称加密）</strong></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3nMs1"><img src="https://s1.ax1x.com/2022/11/22/z3nMs1.png" alt="z3nMs1.png"></a></p>
+<h3 id="TCP-x2F-IP协议"><a href="#TCP-x2F-IP协议" class="headerlink" title="TCP&#x2F;IP协议"></a>TCP&#x2F;IP协议</h3><p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3n8IO"><img src="https://s1.ax1x.com/2022/11/22/z3n8IO.png" alt="z3n8IO.png"></a></p>
+<p>TCP&#x2F;IP协议往往指的是互联网协议的统称</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3nNzd"><img src="https://s1.ax1x.com/2022/11/22/z3nNzd.png" alt="z3nNzd.png"></a></p>
+<p>数据处理流程</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3nwLt"><img src="https://s1.ax1x.com/2022/11/22/z3nwLt.png" alt="z3nwLt.png"></a></p>
+<p>区分不同的通信</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3nDdf"><img src="https://s1.ax1x.com/2022/11/22/z3nDdf.png" alt="z3nDdf.png"></a></p>
+<p>IP</p>
+<p>网络标识+主机标识</p>
+<p>通过网络标识来标记不同网段</p>
+<h2 id="TCP和UDP协议的区别"><a href="#TCP和UDP协议的区别" class="headerlink" title="TCP和UDP协议的区别"></a>TCP和UDP协议的区别</h2><p>UDP：</p>
+<ul>
+<li>无连接协议，想发就发，不会预先打招呼</li>
+<li>有单播、多播、广播的功能，不仅仅支持一对一传输</li>
+<li>面向报文，即UDP对应用层传递过来的报文既不合并也不拆分</li>
+<li>不可靠性，即UDP不会根据网络情况调整发送速率，也不会检查数据包是否发送成功</li>
+<li>头部开销小，仅仅有8字节，相比于TCP头部的至少20字节来说确实小了很多。</li>
+</ul>
+<p>TCP：</p>
+<ul>
+<li>面向连接，发送数据前两端必须事先建立连接。</li>
+<li>仅支持单播</li>
+<li>面向字节流，会将应用层的报文进行拆分以字节流的方式进行发送</li>
+<li>可靠数据传输，能够确定发送顺序，是否丢包，按照当前网络拥塞情况调整发送速度。</li>
+<li>拥塞控制</li>
+<li>全双工通信</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3ncWQ"><img src="https://s1.ax1x.com/2022/11/22/z3ncWQ.png" alt="z3ncWQ.png"></a></p>
+<h3 id="TCP重传机制"><a href="#TCP重传机制" class="headerlink" title="TCP重传机制"></a>TCP重传机制</h3><ul>
+<li>基于计时器</li>
+<li>基于ACK确认序号</li>
+</ul>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p>三次握手的目的主要是建立TCP连接，确认双发的收发状态，同步发送双方的序列号和确认号，交换TCP窗口大小信息。</p>
+<ul>
+<li>SYN同步位，1表示进行连接请求，0表示不进行</li>
+<li>ACK确认位，1表示确认有效，0表示确认无效</li>
+<li>ack确认号，一般等于对方发送过来的序号+1</li>
+<li>seq序列号，起初是随机的，之后等于对方发送过来的确认号</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/search/">Search</a></li>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/archives/">writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li>
+         
+          <li><a href="/blog/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP"><span class="toc-number">2.</span> <span class="toc-text">HTTP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E7%89%B9%E7%82%B9"><span class="toc-number">2.1.</span> <span class="toc-text">HTTP特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E7%BC%BA%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">HTTP缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%B7%E5%A7%8B%E8%A1%8C"><span class="toc-number">2.3.</span> <span class="toc-text">起始行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%B4%E9%83%A8"><span class="toc-number">2.4.</span> <span class="toc-text">头部</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A9%BA%E8%A1%8C"><span class="toc-number">2.5.</span> <span class="toc-text">空行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E4%BD%93"><span class="toc-number">2.6.</span> <span class="toc-text">实体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95"><span class="toc-number">2.7.</span> <span class="toc-text">请求方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GET%E5%92%8CPOST%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">2.8.</span> <span class="toc-text">GET和POST的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E7%A0%81"><span class="toc-number">2.9.</span> <span class="toc-text">状态码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#URI"><span class="toc-number">3.</span> <span class="toc-text">URI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%B4%E9%83%A8%E5%AD%97%E6%AE%B5"><span class="toc-number">3.1.</span> <span class="toc-text">头部字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">3.2.</span> <span class="toc-text">两种表单提交的方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%9F%E5%A4%B4%E9%98%BB%E5%A1%9E%E9%97%AE%E9%A2%98"><span class="toc-number">3.3.</span> <span class="toc-text">队头阻塞问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP1-0%E5%92%8C1-1%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">3.4.</span> <span class="toc-text">HTTP1.0和1.1的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP1-1%E5%92%8C2-0%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">3.5.</span> <span class="toc-text">HTTP1.1和2.0的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5%E7%BD%91%E5%9D%80%E4%B9%8B%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-number">3.6.</span> <span class="toc-text">浏览器输入网址之后发生了什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP-x2F-IP%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.7.</span> <span class="toc-text">TCP&#x2F;IP协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP%E5%92%8CUDP%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">4.</span> <span class="toc-text">TCP和UDP协议的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP%E9%87%8D%E4%BC%A0%E6%9C%BA%E5%88%B6"><span class="toc-number">4.1.</span> <span class="toc-text">TCP重传机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="toc-number">4.2.</span> <span class="toc-text">三次握手</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&text=计算机网络"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&title=计算机网络"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&is_video=false&description=计算机网络"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=计算机网络&body=Check out this article: https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&title=计算机网络"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&title=计算机网络"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&title=计算机网络"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&title=计算机网络"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&name=计算机网络&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/11/06/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/&t=计算机网络"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    BenGuanRan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/blog/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/blog/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+    <!-- jquery -->
+ 
+  
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+   
+    
+<script src="/blog/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

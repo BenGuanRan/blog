@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Why RN 可以跨平台？How To Work？通过使用js来访问移动平台的API，以及使用React组件来描述UI的外观和行为。在Android&#x2F;IOS开发中，视图是UI的最基本组成部分，在web中与之对应的是组件。在运行时，RN会为所有组件创建视图。可以理解为一个翻译的过程。其中用户编写的RN组件被称为原生组件，核心组件是一种特殊的原生组件，是一种无需编写，RN内置的随时可用的组件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React Native-入门">
+<meta property="og:url" content="https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="BenGuanRan&#39;s Blog">
+<meta property="og:description" content="Why RN 可以跨平台？How To Work？通过使用js来访问移动平台的API，以及使用React组件来描述UI的外观和行为。在Android&#x2F;IOS开发中，视图是UI的最基本组成部分，在web中与之对应的是组件。在运行时，RN会为所有组件创建视图。可以理解为一个翻译的过程。其中用户编写的RN组件被称为原生组件，核心组件是一种特殊的原生组件，是一种无需编写，RN内置的随时可用的组件">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-03-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-03-12T07:25:16.895Z">
+<meta property="article:author" content="BenGuanRan">
+<meta property="article:tag" content="React Native">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>React Native-入门</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/blog/2023/03/23/Nextjs%E5%85%A5%E9%97%A8/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/blog/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&text=React Native-入门"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&title=React Native-入门"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&is_video=false&description=React Native-入门"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=React Native-入门&body=Check out this article: https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&title=React Native-入门"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&title=React Native-入门"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&title=React Native-入门"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&title=React Native-入门"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&name=React Native-入门&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&t=React Native-入门"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Why-RN-%E5%8F%AF%E4%BB%A5%E8%B7%A8%E5%B9%B3%E5%8F%B0%EF%BC%9FHow-To-Work%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">Why RN 可以跨平台？How To Work？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">核心组件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TextInput"><span class="toc-number">2.1.</span> <span class="toc-text">TextInput</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ScrollView"><span class="toc-number">2.2.</span> <span class="toc-text">ScrollView</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%95%BF%E5%88%97%E8%A1%A8%EF%BC%88FlatList-x2F-SectionList%EF%BC%89"><span class="toc-number">2.3.</span> <span class="toc-text">长列表（FlatList&#x2F;SectionList）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E5%AE%9A%E5%B9%B3%E5%8F%B0%E4%BB%A3%E7%A0%81%EF%BC%88Platform-%E6%A8%A1%E5%9D%97%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">特定平台代码（Platform 模块）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Platform-OS"><span class="toc-number">3.1.</span> <span class="toc-text">Platform.OS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Platform-select"><span class="toc-number">3.2.</span> <span class="toc-text">Platform.select</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Platform-Version"><span class="toc-number">3.3.</span> <span class="toc-text">Platform.Version</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E5%AE%9A%E5%B9%B3%E5%8F%B0%E5%90%8E%E7%BC%80"><span class="toc-number">3.4.</span> <span class="toc-text">特定平台后缀</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        React Native-入门
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">BenGuanRan</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-03-11T16:00:00.000Z" itemprop="datePublished">2023-03-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/React-Native/" rel="tag">React Native</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Why-RN-可以跨平台？How-To-Work？"><a href="#Why-RN-可以跨平台？How-To-Work？" class="headerlink" title="Why RN 可以跨平台？How To Work？"></a>Why RN 可以跨平台？How To Work？</h2><p>通过使用js来访问移动平台的API，以及使用React组件来描述UI的外观和行为。<br>在Android&#x2F;IOS开发中，视图是UI的最基本组成部分，在web中与之对应的是组件。在运行时，RN会为所有组件创建视图。可以理解为一个翻译的过程。<br>其中用户编写的RN组件被称为原生组件，核心组件是一种特殊的原生组件，是一种无需编写，RN内置的随时可用的组件。</p>
+<h2 id="核心组件"><a href="#核心组件" class="headerlink" title="核心组件"></a>核心组件</h2><table>
+<thead>
+<tr>
+<th>REACT NATIVE UI COMPONENT</th>
+<th>ANDROID VIEW</th>
+<th>IOS VIEW</th>
+<th>WEB ANALOG</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>View</td>
+<td>ViewGroup</td>
+<td>UIView</td>
+<td>A non-scrollling div</td>
+<td>A container that supports layout with flexbox, style, some touch handling, and accessibility controls</td>
+</tr>
+<tr>
+<td>Text</td>
+<td>TextView</td>
+<td>UITextView</td>
+<td>p</td>
+<td>Displays, styles, and nests strings of text and even handles touch events</td>
+</tr>
+<tr>
+<td>Image</td>
+<td>ImageView</td>
+<td>UIImageView</td>
+<td>img</td>
+<td>Displays different types of images</td>
+</tr>
+<tr>
+<td>ScrollView</td>
+<td>ScrollView</td>
+<td>UIScrollView</td>
+<td>div</td>
+<td>A generic scrolling container that can contain multiple components and views</td>
+</tr>
+<tr>
+<td>TextInput</td>
+<td>EditText</td>
+<td>UITextField</td>
+<td>input type&#x3D;”text”</td>
+<td>Allows the user to enter text</td>
+</tr>
+</tbody></table>
+<p><strong>一个核心组件使用栗子：</strong></p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">View</span>, <span class="title class_">Text</span>, <span class="title class_">Image</span>, <span class="title class_">ScrollView</span>, <span class="title class_">TextInput</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-native&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">App</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ScrollView</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Text</span>&gt;</span>Some text<span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">View</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Text</span>&gt;</span>Some more text<span class="tag">&lt;/<span class="name">Text</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Image</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">source</span>=<span class="string">&#123;&#123;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">uri:</span> &#x27;<span class="attr">https:</span>//<span class="attr">reactnative.dev</span>/<span class="attr">docs</span>/<span class="attr">assets</span>/<span class="attr">p_cat2.png</span>&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">style</span>=<span class="string">&#123;&#123;</span> <span class="attr">width:</span> <span class="attr">200</span>, <span class="attr">height:</span> <span class="attr">200</span> &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">View</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">TextInput</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">style</span>=<span class="string">&#123;&#123;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">height:</span> <span class="attr">40</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">borderColor:</span> &#x27;<span class="attr">gray</span>&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">borderWidth:</span> <span class="attr">1</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">defaultValue</span>=<span class="string">&quot;You can type in me&quot;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ScrollView</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="TextInput"><a href="#TextInput" class="headerlink" title="TextInput"></a>TextInput</h3><p>TextInput是一个允许用户输入文本的基础组件。它有一个名为onChangeText的属性，此属性接受一个函数，而此函数会在文本变化时被调用。另外还有一个名为onSubmitEditing的属性，会在文本被提交后（用户按下软键盘上的提交键）调用。</p>
+<h3 id="ScrollView"><a href="#ScrollView" class="headerlink" title="ScrollView"></a>ScrollView</h3><p>ScrollView是一个通用的可滚动的容器，你可以在其中放入多个组件和视图，而且这些组件并不需要是同类型的。ScrollView 不仅可以垂直滚动，还能水平滚动（通过horizontal属性来设置）。<br>使用pagingEnabled属性来允许使用滑动手势对视图进行分页，在 Android 上也可以利用ViewPager组件水平滑动视图。<br><strong>ScrollView适合用来显示数量不多的滚动元素</strong>。<strong>放置在ScrollView中的所有组件都会被渲染，哪怕有些组件因为内容太长被挤出了屏幕外</strong>。如果你需要显示较长的滚动列表，那么应该使用功能差不多但性能更好的<strong>FlatList组件</strong>。</p>
+<h3 id="长列表（FlatList-x2F-SectionList）"><a href="#长列表（FlatList-x2F-SectionList）" class="headerlink" title="长列表（FlatList&#x2F;SectionList）"></a>长列表（FlatList&#x2F;SectionList）</h3><p><strong>FlatList</strong><br>FlatList组件用于显示一个垂直的滚动列表，其中的元素之间结构近似而仅数据不同。<br>FlatList更适于长列表数据，且元素个数可以增删。和ScrollView不同的是，FlatList并不立即渲染所有元素，而是优先渲染屏幕上可见的元素。<br>FlatList组件必须的两个属性是<strong>data</strong>和<strong>renderItem</strong>。data是列表的数据源，而renderItem则从数据源中逐个解析数据，然后返回一个设定好格式的组件来渲染。<br><strong>SectionList</strong></p>
+<ul>
+<li>sections 设置title和data</li>
+<li>renderItem</li>
+<li>renderSectionHeader</li>
+<li>keyExtractor</li>
+</ul>
+<h2 id="特定平台代码（Platform-模块）"><a href="#特定平台代码（Platform-模块）" class="headerlink" title="特定平台代码（Platform 模块）"></a>特定平台代码（Platform 模块）</h2><h3 id="Platform-OS"><a href="#Platform-OS" class="headerlink" title="Platform.OS"></a>Platform.OS</h3><p>在IOS返回ios，Android返回android</p>
+<h3 id="Platform-select"><a href="#Platform-select" class="headerlink" title="Platform.select"></a>Platform.select</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Platform</span>.<span class="title function_">select</span>(&#123;</span><br><span class="line">    <span class="attr">ios</span>: &#123;</span><br><span class="line">      <span class="attr">backgroundColor</span>: <span class="string">&#x27;red&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">android</span>: &#123;</span><br><span class="line">      <span class="attr">backgroundColor</span>: <span class="string">&#x27;blue&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;),</span><br></pre></td></tr></table></figure>
+<h3 id="Platform-Version"><a href="#Platform-Version" class="headerlink" title="Platform.Version"></a>Platform.Version</h3><p>检测设备版本</p>
+<h3 id="特定平台后缀"><a href="#特定平台后缀" class="headerlink" title="特定平台后缀"></a>特定平台后缀</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">BigButton.ios.js</span><br><span class="line">BigButton.android.js</span><br></pre></td></tr></table></figure>
+<p>可以去掉平台后缀直接引用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">BigButton</span> <span class="keyword">from</span> <span class="string">&#x27;./BigButton&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>如果你还希望在 web 端复用 React Native 的代码，那么还可以使用.native.js的后缀。此时 iOS 和 Android 会使用BigButton.native.js文件，而 web 端会使用BigButton.js。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Container.js # 由 Webpack, Rollup 或者其他打包工具打包的文件</span><br><span class="line">Container.native.js # 由 React Native 自带打包工具(Metro) 为ios和android 打包的文件</span><br></pre></td></tr></table></figure>
+<p>在引用时并不需要添加.native.后缀:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Container</span> <span class="keyword">from</span> <span class="string">&#x27;./Container&#x27;</span>;</span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/search/">Search</a></li>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/archives/">writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li>
+         
+          <li><a href="/blog/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Why-RN-%E5%8F%AF%E4%BB%A5%E8%B7%A8%E5%B9%B3%E5%8F%B0%EF%BC%9FHow-To-Work%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">Why RN 可以跨平台？How To Work？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">核心组件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TextInput"><span class="toc-number">2.1.</span> <span class="toc-text">TextInput</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ScrollView"><span class="toc-number">2.2.</span> <span class="toc-text">ScrollView</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%95%BF%E5%88%97%E8%A1%A8%EF%BC%88FlatList-x2F-SectionList%EF%BC%89"><span class="toc-number">2.3.</span> <span class="toc-text">长列表（FlatList&#x2F;SectionList）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E5%AE%9A%E5%B9%B3%E5%8F%B0%E4%BB%A3%E7%A0%81%EF%BC%88Platform-%E6%A8%A1%E5%9D%97%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">特定平台代码（Platform 模块）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Platform-OS"><span class="toc-number">3.1.</span> <span class="toc-text">Platform.OS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Platform-select"><span class="toc-number">3.2.</span> <span class="toc-text">Platform.select</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Platform-Version"><span class="toc-number">3.3.</span> <span class="toc-text">Platform.Version</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E5%AE%9A%E5%B9%B3%E5%8F%B0%E5%90%8E%E7%BC%80"><span class="toc-number">3.4.</span> <span class="toc-text">特定平台后缀</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&text=React Native-入门"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&title=React Native-入门"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&is_video=false&description=React Native-入门"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=React Native-入门&body=Check out this article: https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&title=React Native-入门"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&title=React Native-入门"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&title=React Native-入门"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&title=React Native-入门"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&name=React Native-入门&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2023/03/12/RN-%E5%85%A5%E9%97%A8/&t=React Native-入门"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    BenGuanRan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/blog/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/blog/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+    <!-- jquery -->
+ 
+  
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+   
+    
+<script src="/blog/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="浏览器缓存 强缓存早期HTTP1.0 通过Expires字段,存在于浏览器返回的响应头中，告诉浏览器这个过程是可以直接从浏览器获取数据，无需再次请求。 1Expires: Wed, 22 Nov 2019 08:41:00 GMT   但是由于服务器和浏览器时间可能并不一致，因此在HTTP1.1中这种操作被废弃了。 Cache-Control 区别于Expires的具体的过期时间，前者采用了过期时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浏览器">
+<meta property="og:url" content="https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/index.html">
+<meta property="og:site_name" content="BenGuanRan&#39;s Blog">
+<meta property="og:description" content="浏览器缓存 强缓存早期HTTP1.0 通过Expires字段,存在于浏览器返回的响应头中，告诉浏览器这个过程是可以直接从浏览器获取数据，无需再次请求。 1Expires: Wed, 22 Nov 2019 08:41:00 GMT   但是由于服务器和浏览器时间可能并不一致，因此在HTTP1.1中这种操作被废弃了。 Cache-Control 区别于Expires的具体的过期时间，前者采用了过期时">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3ZYGj.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3ZBZT.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3ZRQ1.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3Z5dO.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3ZIoD.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3e9YQ.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3enkF.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3euY4.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3eYTO.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3eafH.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3eafH.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3eB6I.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3eh1s.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3eon0.png">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3eqNF.png">
+<meta property="article:published_time" content="2022-11-11T16:03:54.000Z">
+<meta property="article:modified_time" content="2023-04-09T05:43:18.423Z">
+<meta property="article:author" content="BenGuanRan">
+<meta property="article:tag" content="浏览器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2022/11/22/z3ZYGj.md.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>浏览器</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/blog/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/blog/2022/11/11/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-JS/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&text=浏览器"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&title=浏览器"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&is_video=false&description=浏览器"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=浏览器&body=Check out this article: https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&title=浏览器"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&title=浏览器"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&title=浏览器"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&title=浏览器"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&name=浏览器&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&t=浏览器"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98"><span class="toc-number">1.</span> <span class="toc-text">浏览器缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%BA%E7%BC%93%E5%AD%98"><span class="toc-number">1.1.</span> <span class="toc-text">强缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98"><span class="toc-number">1.2.</span> <span class="toc-text">协商缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E5%AD%98%E6%94%BE%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="toc-number">1.3.</span> <span class="toc-text">缓存存放的位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">1.4.</span> <span class="toc-text">总结：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8"><span class="toc-number">2.</span> <span class="toc-text">浏览器本地存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E6%B5%8F%E8%A7%88%E5%99%A8%E5%88%B0%E9%A1%B5%E9%9D%A2%E5%91%88%E7%8E%B0%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">输入浏览器到页面呈现发生了什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E8%A7%92%E5%BA%A6"><span class="toc-number">3.1.</span> <span class="toc-text">网络角度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90%E7%AE%97%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">解析算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B"><span class="toc-number">3.3.</span> <span class="toc-text">渲染过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E7%BB%98%E3%80%81%E5%9B%9E%E6%B5%81%E3%80%81%E5%90%88%E6%88%90"><span class="toc-number">4.</span> <span class="toc-text">重绘、回流、合成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E7%BB%98"><span class="toc-number">4.1.</span> <span class="toc-text">重绘</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E6%B5%81"><span class="toc-number">4.2.</span> <span class="toc-text">回流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E6%88%90"><span class="toc-number">4.3.</span> <span class="toc-text">合成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5%E6%84%8F%E4%B9%89"><span class="toc-number">4.4.</span> <span class="toc-text">实践意义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8"><span class="toc-number">5.</span> <span class="toc-text">浏览器安全</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%94%BB%E5%87%BB%EF%BC%88Cross-Site-Scripting%EF%BC%89"><span class="toc-number">5.1.</span> <span class="toc-text">XSS跨站脚本攻击（Cross Site Scripting）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CSRF%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0%EF%BC%88Cross-site-request-forgery%EF%BC%89"><span class="toc-number">5.2.</span> <span class="toc-text">CSRF跨站请求伪造（Cross-site request forgery）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8F%91%E8%B5%B7GET%E8%AF%B7%E6%B1%82"><span class="toc-number">6.</span> <span class="toc-text">自动发起GET请求</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB"><span class="toc-number">6.1.</span> <span class="toc-text">中间人攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTPS%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AE%A9%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E6%9B%B4%E5%AE%89%E5%85%A8"><span class="toc-number">6.2.</span> <span class="toc-text">HTTPS为什么让数据传输更安全</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BB%84%E6%88%90"><span class="toc-number">7.</span> <span class="toc-text">浏览器组成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6"><span class="toc-number">8.</span> <span class="toc-text">浏览器事件循环机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E6%A0%88"><span class="toc-number">8.1.</span> <span class="toc-text">执行栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E9%98%9F%E5%88%97"><span class="toc-number">8.2.</span> <span class="toc-text">任务队列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E9%A6%96%E5%B1%8F%E5%8A%A0%E8%BD%BD%E6%97%B6%E9%97%B4"><span class="toc-number">9.</span> <span class="toc-text">优化首屏加载时间</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        浏览器
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">BenGuanRan</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-11-11T16:03:54.000Z" itemprop="datePublished">2022-11-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" rel="tag">浏览器</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="浏览器缓存"><a href="#浏览器缓存" class="headerlink" title="浏览器缓存"></a>浏览器缓存</h2><p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3ZYGj"><img src="https://s1.ax1x.com/2022/11/22/z3ZYGj.md.png" alt="z3ZYGj.md.png"></a></p>
+<h3 id="强缓存"><a href="#强缓存" class="headerlink" title="强缓存"></a>强缓存</h3><p>早期HTTP1.0</p>
+<p>通过<strong>Expires字段</strong>,存在于浏览器返回的响应头中，告诉浏览器这个过程是可以直接从浏览器获取数据，无需再次请求。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Expires</span>: <span class="title class_">Wed</span>, <span class="number">22</span> <span class="title class_">Nov</span> <span class="number">2019</span> <span class="number">08</span>:<span class="number">41</span>:<span class="number">00</span> <span class="variable constant_">GMT</span> </span><br></pre></td></tr></table></figure>
+
+<p>但是由于服务器和浏览器时间可能并不一致，因此在HTTP1.1中这种操作被废弃了。</p>
+<p><strong>Cache-Control</strong></p>
+<p>区别于Expires的具体的过期时间，前者采用了过期时长来控制。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Cache</span>-<span class="title class_">Control</span>:max-age=<span class="number">3600</span></span><br></pre></td></tr></table></figure>
+
+<p>还有其他参数</p>
+<ul>
+<li>private只有浏览器进行缓存</li>
+<li>no-cache跳过强缓存，直接进入协商缓存</li>
+<li>no-store不进行缓存</li>
+<li>s-maxage针对代理服务器的缓存时间</li>
+</ul>
+<h3 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h3><p>当强缓存失效后，浏览器在请求头中携带相应的缓存tag来向服务器发请求，由服务器根据这个tag，来决定是否使用缓存。</p>
+<p><strong>缓存tag：</strong></p>
+<ul>
+<li><p><strong>Last-Modified最后修改时间</strong></p>
+<p>  服务器在第一次响应后会在响应头添加这个字段，也就是服务器的最后修改时间，浏览器第二次请求会加上浏览器传过来的最后修改时间，若服务器端修改时间改变，则直接更新，返回新的资源。否则返回304，告诉浏览器直接使用缓存</p>
+</li>
+<li><p><strong>ETag文件唯一标识</strong></p>
+<p>  ETag是服务器根据当前文件内容给浏览器添加的唯一标识，第一次请求时，浏览器会将ETag直接放在响应头发送给浏览器，浏览器在下次请求后会将这个值作为<strong>If-None-Match</strong></p>
+<p>  这个字段的内容，将其发送给服务器，服务器再进行对比，并决定浏览器是否使用缓存。</p>
+</li>
+</ul>
+<p><strong>两者对比：</strong></p>
+<p>从精准度来将，ETag显然更高，而从性能来看，Last-Modifie显然更方便。</p>
+<h3 id="缓存存放的位置"><a href="#缓存存放的位置" class="headerlink" title="缓存存放的位置"></a>缓存存放的位置</h3><p>按照优先级高低排列依次是：</p>
+<ul>
+<li><p><strong>Service Worker</strong></p>
+<p>  借鉴了webworker的思路，让js运行在主线程之外，但是脱离了浏览器窗体，不能操纵DOM</p>
+</li>
+<li><p>Memory Cache</p>
+<p>  效率快，但存活时间短</p>
+</li>
+<li><p>Disk Cache</p>
+<p>  效率慢，但存活时间长</p>
+</li>
+<li><p>Push Cache</p>
+<p>  在HTTP2.0才更多的使用</p>
+</li>
+</ul>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a><strong>总结：</strong></h3><p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3ZBZT"><img src="https://s1.ax1x.com/2022/11/22/z3ZBZT.md.png" alt="z3ZBZT.md.png"></a></p>
+<h2 id="浏览器本地存储"><a href="#浏览器本地存储" class="headerlink" title="浏览器本地存储"></a>浏览器本地存储</h2><p><strong>主要分为：</strong></p>
+<ul>
+<li><p>C<strong>ookie</strong></p>
+<p>  Cookie最早设计出来仅仅是为了弥补HTTP状态管理上的不足</p>
+<p>  本质上就是在浏览器存储一个很小的文本文件（4KB）</p>
+<p>  但是Cookie有很多致命的缺陷：</p>
+<ul>
+<li><strong>容量缺陷</strong>（4K）</li>
+<li><strong>性能缺陷</strong>（Cookie紧跟域名，尽管该域名某些地址下不需要这些Cookie，请求都会携带上完整的Cookie，这个可以通过设置Cookie来配置）</li>
+<li><strong>安全缺陷</strong>（由于Cookie是以纯文本的形式在浏览器和服务器之间传递，因此很容易被非法劫持篡改，在Cookie有效期内重新发送给服务器，这是相当危险的。而且在HttpOnly为false的情况下，可以用js脚本直接获取Cookie）</li>
+</ul>
+</li>
+<li><p><strong>webStorage</strong></p>
+<p>  <strong>localStorage</strong>与Cookie相似，也会针对一个域名存储数据，但是与Cookie区别很大</p>
+<ul>
+<li><strong>容量上线是5M</strong>,而且是持久存储</li>
+<li><strong>只存在客户端</strong>，默认不参与服务端通信，避免了Cookie带来的性能问题和安全问题</li>
+<li><strong>接口封装</strong></li>
+</ul>
+<p>  <strong>sessionStorage页面关闭就会消失</strong></p>
+<ul>
+<li>可以对表单信息进行维护</li>
+<li>可以用来存储本次浏览记录，例如微博就是</li>
+</ul>
+</li>
+<li><p><strong>IndexedDB</strong></p>
+<p>  运行在浏览器的一个非关系型数据库，理论上它的容量没有上线</p>
+<ul>
+<li>键值对存储</li>
+<li>异步操作</li>
+<li>受同源策略影响</li>
+</ul>
+</li>
+</ul>
+<h2 id="输入浏览器到页面呈现发生了什么？"><a href="#输入浏览器到页面呈现发生了什么？" class="headerlink" title="输入浏览器到页面呈现发生了什么？"></a>输入浏览器到页面呈现发生了什么？</h2><h3 id="网络角度"><a href="#网络角度" class="headerlink" title="网络角度"></a>网络角度</h3><p><strong>（1）构建请求</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 浏览器会构建请求行</span></span><br><span class="line"><span class="variable constant_">GET</span> / <span class="variable constant_">HTTP</span>/<span class="number">1.1</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>（2）查找强缓存</strong></p>
+<p>先查找强缓存，若命中则直接使用，否则进入下一步</p>
+<p><strong>（3）DNS解析</strong></p>
+<p>由于输入的是域名，而数据包是通过IP地址传给对方的。因此我们需要得到域名对应的IP地址。也就是域名系统与IP的一个映射。</p>
+<p>浏览器有DNS数据缓存的功能，即一个域名解析过，下次直接走缓存，不再需要DNS解析</p>
+<p><strong>（4）建立TCP连接</strong></p>
+<p>Chrome在同一域名下要求最多只能有6个TCP连接，超过的话剩下的请求就得等待</p>
+<p>建立TCP连接需要经历下面三个阶段</p>
+<ol>
+<li>三次握手建立客户端与服务器之间的连接</li>
+<li>进行数据传输（接收方在接收到数据之后必须向发送方进行确认，如果发送方没接收到这个消息，则判断数据包丢失）</li>
+<li>四次挥手断开连接</li>
+</ol>
+<p><strong>（5）发送HTTP请求</strong></p>
+<p>请求行+请求头+请求体</p>
+<p><strong>总结</strong></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3ZRQ1"><img src="https://s1.ax1x.com/2022/11/22/z3ZRQ1.md.png" alt="z3ZRQ1.md.png"></a></p>
+<h3 id="解析算法"><a href="#解析算法" class="headerlink" title="解析算法"></a>解析算法</h3><p>完成了网络请求个响应，如果响应头中Content-Type的值是text&#x2F;html,那么接下来的就是浏览器的解析和渲染工作了。</p>
+<ul>
+<li><p><strong>构建DOM树</strong></p>
+<p>  DOM树本质上是以document为根节点的多叉树</p>
+<p>  HTML文法是上下文有关文法</p>
+<p>  解析算法</p>
+<ul>
+<li>标记化</li>
+<li>建树</li>
+</ul>
+</li>
+<li><p><strong>样式计算</strong></p>
+</li>
+<li><p><strong>生成布局树（Layout Tree）</strong><br><a target="_blank" rel="noopener" href="https://imgse.com/i/z3Z5dO"><img src="https://s1.ax1x.com/2022/11/22/z3Z5dO.png" alt="z3Z5dO.png"></a></p>
+</li>
+</ul>
+<h3 id="渲染过程"><a href="#渲染过程" class="headerlink" title="渲染过程"></a>渲染过程</h3><p>在<strong>DOM树</strong> → <strong>布局树（layout tree）</strong>创建之后，浏览器还会创建<strong>图层树（layer tree）</strong></p>
+<p>一般情况下，节点的图层默认属于父亲节点的图层（这些图层也称为<strong>合成层</strong>），那么什么时候节点会提升到单独的图层(<strong>合成层</strong>)呢？<br><a target="_blank" rel="noopener" href="https://imgse.com/i/z3ZIoD"><img src="https://s1.ax1x.com/2022/11/22/z3ZIoD.png" alt="z3ZIoD.png"></a></p>
+<ul>
+<li><p><strong>显示合成，如何产生合成层（形成单独的一层）</strong></p>
+<p>  <a target="_blank" rel="noopener" href="https://imgse.com/i/z3e9YQ"><img src="https://s1.ax1x.com/2022/11/22/z3e9YQ.png" alt="z3e9YQ.png"></a></p>
+</li>
+<li><p><strong>隐式合成，如何被动的形成合成层</strong></p>
+<p>  当层级比较底的节点被提升为单独的图层之后，那么所有层级比他高的节点都会成为一个单独的图层。<br>  <strong>层爆炸原理</strong>当一个z-index比较低的元素被提升为单独图层之后，层叠在他上面的元素统统会被提升为单独的图层，可能会增加上千个图层，大大增加内存压力！<strong>但是现在浏览器优化做的很好，已经很少存在层爆炸现象了！（层压缩）</strong></p>
+</li>
+<li><p><strong>合成层的优缺点</strong></p>
+<p>  优点：</p>
+<ul>
+<li>合成层的位图会交给GPU合成，比CPU快，减轻CPU负担</li>
+<li>需要repaint时，仅仅重绘本身，不会影响到其他图层</li>
+<li>transform 和 opacity 才不会触发 repaint，如果不是合成层，则其依然会触发 repaint。</li>
+</ul>
+<p>  缺点：</p>
+<ul>
+<li>绘制的图层必须传输到 GPU，这些层的数量和大小达到一定量级后，可能会导致传输非常慢，进而导致一些低端和中端设备上出现闪烁；</li>
+<li>隐式合成容易产生过量的合成层，每个合成层都占用额外的内存，而内存是移动设备上的宝贵资源，过多使用内存可能会导致浏览器崩溃，让性能优化适得其反。</li>
+</ul>
+</li>
+</ul>
+<h2 id="重绘、回流、合成"><a href="#重绘、回流、合成" class="headerlink" title="重绘、回流、合成"></a>重绘、回流、合成</h2><h3 id="重绘"><a href="#重绘" class="headerlink" title="重绘"></a>重绘</h3><p><strong>触发条件</strong></p>
+<p>当DOM的修改导致样式的变化，并且没有影响几何属性的时候，会导致重绘</p>
+<p><strong>重绘过程</strong></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3enkF"><img src="https://s1.ax1x.com/2022/11/22/z3enkF.png" alt="z3enkF.png"></a><br><strong>重绘不一定导致回流，但回流一定发生重绘</strong></p>
+<h3 id="回流"><a href="#回流" class="headerlink" title="回流"></a>回流</h3><p><strong>触发条件</strong></p>
+<p>当对DOM结构的修改引发的DOM集合尺寸变化的时候，会发生回流</p>
+<ul>
+<li>几何属性：width、height、padding、margin、left、top、border等</li>
+<li>DOM节点发生增删或移动</li>
+<li>读写offset、scroll、client族属性时，浏览器为了获取这些值，会进行回流操作</li>
+<li>调用window.getComputedStyle方法</li>
+</ul>
+<p><strong>回流过程</strong></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3euY4"><img src="https://s1.ax1x.com/2022/11/22/z3euY4.png" alt="z3euY4.png"></a></p>
+<h3 id="合成"><a href="#合成" class="headerlink" title="合成"></a>合成</h3><p>有一种情况是直接合成，比如利用CSS3的transform、opacity、filter这些属性就可以实现合成的效果，也就是GPU加速。</p>
+<p>在合成的情况下，会直接跳过布局和绘制的过程，直接进入非主线程处理的部分，即交给合成线程处理。</p>
+<p>GPU善于进行图像处理</p>
+<h3 id="实践意义"><a href="#实践意义" class="headerlink" title="实践意义"></a>实践意义</h3><ul>
+<li>避免频繁修改style，而是采用修改class的方式</li>
+<li>使用createDocumentFragment进行批量的DOM操作</li>
+<li>对于resize、sscroll等进行防抖节流处理</li>
+<li>添加<strong>will-change:transform，</strong> 让渲染引擎为其单独实现一个图层</li>
+</ul>
+<h2 id="浏览器安全"><a href="#浏览器安全" class="headerlink" title="浏览器安全"></a>浏览器安全</h2><h3 id="XSS跨站脚本攻击（Cross-Site-Scripting）"><a href="#XSS跨站脚本攻击（Cross-Site-Scripting）" class="headerlink" title="XSS跨站脚本攻击（Cross Site Scripting）"></a>XSS跨站脚本攻击（Cross Site Scripting）</h3><p>指在浏览器中执行恶意脚本，从而拿到用户的信息并进行操作。浏览器没有对恶意代码进行过滤，使其在用户浏览器运行，从而：</p>
+<ul>
+<li>窃取Cookie</li>
+<li>监听用户行为，比如输入账号密码之后直接发送到黑客服务器</li>
+<li>修改DOM伪造登录表单</li>
+<li>在页面中生成悬浮广告</li>
+</ul>
+<p><strong>XSS也分为下面三种方式：</strong></p>
+<ul>
+<li><p><strong>1.</strong>  <strong>存储型</strong></p>
+<p>  <a target="_blank" rel="noopener" href="https://imgse.com/i/z3eYTO"><img src="https://s1.ax1x.com/2022/11/22/z3eYTO.png" alt="z3eYTO.png"></a></p>
+</li>
+<li><p><strong>2.  反射型</strong></p>
+<p>  <a target="_blank" rel="noopener" href="https://imgse.com/i/z3eafH"><img src="https://s1.ax1x.com/2022/11/22/z3eafH.png" alt="z3eafH.png"></a></p>
+</li>
+<li><p><strong>3.  文档型</strong></p>
+<p>  <a target="_blank" rel="noopener" href="https://imgse.com/i/z3eafH"><img src="https://s1.ax1x.com/2022/11/22/z3eafH.png" alt="z3eafH.png"></a></p>
+</li>
+</ul>
+<p><strong>防范措施（一个信念，两个利用）：</strong></p>
+<ul>
+<li>永远不要相信任何用户输入</li>
+<li>利用Cookie的HttpOnly进制JS脚本获取Cookie</li>
+<li>利用CSP规定浏览器只能访问特定资源</li>
+</ul>
+<h3 id="CSRF跨站请求伪造（Cross-site-request-forgery）"><a href="#CSRF跨站请求伪造（Cross-site-request-forgery）" class="headerlink" title="CSRF跨站请求伪造（Cross-site request forgery）"></a>CSRF跨站请求伪造（Cross-site request forgery）</h3><ul>
+<li><h2 id="自动发起GET请求"><a href="#自动发起GET请求" class="headerlink" title="自动发起GET请求"></a>自动发起GET请求</h2><p>  <a target="_blank" rel="noopener" href="https://imgse.com/i/z3eB6I"><img src="https://s1.ax1x.com/2022/11/22/z3eB6I.png" alt="z3eB6I.png"></a></p>
+</li>
+<li><p>模拟用户自动发送post</p>
+</li>
+<li><p>诱导点击发送GET请求</p>
+</li>
+</ul>
+<p><strong>解决办法：</strong></p>
+<ul>
+<li>利用Cookie sameSite属性，对请求的Cookie携带进行限制</li>
+<li>验证来源站点，通过请求头里面的Origin Referer</li>
+<li>CSRF Token ， 例如Python Django框架，在请求的时候向服务器发送指定字符串，当再次发送请求时，客户端携带指定字符串，服务器经验证通过后，才命中请求。</li>
+</ul>
+<h3 id="中间人攻击"><a href="#中间人攻击" class="headerlink" title="中间人攻击"></a>中间人攻击</h3><h3 id="HTTPS为什么让数据传输更安全"><a href="#HTTPS为什么让数据传输更安全" class="headerlink" title="HTTPS为什么让数据传输更安全"></a>HTTPS为什么让数据传输更安全</h3><p>由于HTTP明文传输，可能被截获、伪造请求，不会验证报文完整性</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3eh1s"><img src="https://s1.ax1x.com/2022/11/22/z3eh1s.png" alt="z3eh1s.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3eon0"><img src="https://s1.ax1x.com/2022/11/22/z3eon0.png" alt="z3eon0.png"></a></p>
+<p><strong>HTTPS的优点：</strong></p>
+<ul>
+<li>加密</li>
+<li>完整性校验</li>
+<li>身份认证</li>
+</ul>
+<p><strong>什么是TLS&#x2F;SSL？</strong></p>
+<p><code>TLS(Transport Layer Security)</code>是 <code>SSL(Secure Socket Layer)</code>的后续版本，它们是用于在互联网两台计算机之间用于<code>身份验证</code>和<code>加密</code>的一种协议。</p>
+<p><strong>TLS使用了对称加密和非对称加密两种</strong></p>
+<p>对称加密，一个密钥，如果密钥泄露，就完蛋了</p>
+<p>非对称加密，一个公钥，一个私钥，即使公钥泄露，私钥依然保存在自己手中，没完蛋，但是是单向的，我传你，你不能传我</p>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3eqNF"><img src="https://s1.ax1x.com/2022/11/22/z3eqNF.png" alt="z3eqNF.png"></a></p>
+<h2 id="浏览器组成"><a href="#浏览器组成" class="headerlink" title="浏览器组成"></a>浏览器组成</h2><ul>
+<li>浏览器主进程</li>
+<li>GPU进程</li>
+<li>网络进程</li>
+<li>多个渲染进程</li>
+<li>多个插件进程</li>
+</ul>
+<h2 id="浏览器事件循环机制"><a href="#浏览器事件循环机制" class="headerlink" title="浏览器事件循环机制"></a>浏览器事件循环机制</h2><h3 id="执行栈"><a href="#执行栈" class="headerlink" title="执行栈"></a>执行栈</h3><p>每一个函数在运行的时候都会生成新的执行上下文，执行上下文回包含当前函数的参数，局部变量信息，正在执行的上下文始终处于栈的顶部</p>
+<h3 id="任务队列"><a href="#任务队列" class="headerlink" title="任务队列"></a>任务队列</h3><h2 id="优化首屏加载时间"><a href="#优化首屏加载时间" class="headerlink" title="优化首屏加载时间"></a>优化首屏加载时间</h2><p>计算方式：performance.timing.domComplete - performance.timing.navigationStart</p>
+<ul>
+<li>使用路由懒加载，只有在跳转到该路由时才加载组件</li>
+<li>最好使用CDN的方式引入</li>
+<li>采用HTTP缓存</li>
+<li>按需加载组件</li>
+<li>图片资源压缩</li>
+<li>gzip格式压缩</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/search/">Search</a></li>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/archives/">writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li>
+         
+          <li><a href="/blog/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98"><span class="toc-number">1.</span> <span class="toc-text">浏览器缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%BA%E7%BC%93%E5%AD%98"><span class="toc-number">1.1.</span> <span class="toc-text">强缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98"><span class="toc-number">1.2.</span> <span class="toc-text">协商缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E5%AD%98%E6%94%BE%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="toc-number">1.3.</span> <span class="toc-text">缓存存放的位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">1.4.</span> <span class="toc-text">总结：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8"><span class="toc-number">2.</span> <span class="toc-text">浏览器本地存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E6%B5%8F%E8%A7%88%E5%99%A8%E5%88%B0%E9%A1%B5%E9%9D%A2%E5%91%88%E7%8E%B0%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">输入浏览器到页面呈现发生了什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E8%A7%92%E5%BA%A6"><span class="toc-number">3.1.</span> <span class="toc-text">网络角度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E6%9E%90%E7%AE%97%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">解析算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E8%BF%87%E7%A8%8B"><span class="toc-number">3.3.</span> <span class="toc-text">渲染过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E7%BB%98%E3%80%81%E5%9B%9E%E6%B5%81%E3%80%81%E5%90%88%E6%88%90"><span class="toc-number">4.</span> <span class="toc-text">重绘、回流、合成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E7%BB%98"><span class="toc-number">4.1.</span> <span class="toc-text">重绘</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E6%B5%81"><span class="toc-number">4.2.</span> <span class="toc-text">回流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E6%88%90"><span class="toc-number">4.3.</span> <span class="toc-text">合成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5%E6%84%8F%E4%B9%89"><span class="toc-number">4.4.</span> <span class="toc-text">实践意义</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AE%89%E5%85%A8"><span class="toc-number">5.</span> <span class="toc-text">浏览器安全</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%94%BB%E5%87%BB%EF%BC%88Cross-Site-Scripting%EF%BC%89"><span class="toc-number">5.1.</span> <span class="toc-text">XSS跨站脚本攻击（Cross Site Scripting）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CSRF%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0%EF%BC%88Cross-site-request-forgery%EF%BC%89"><span class="toc-number">5.2.</span> <span class="toc-text">CSRF跨站请求伪造（Cross-site request forgery）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8F%91%E8%B5%B7GET%E8%AF%B7%E6%B1%82"><span class="toc-number">6.</span> <span class="toc-text">自动发起GET请求</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB"><span class="toc-number">6.1.</span> <span class="toc-text">中间人攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTPS%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AE%A9%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E6%9B%B4%E5%AE%89%E5%85%A8"><span class="toc-number">6.2.</span> <span class="toc-text">HTTPS为什么让数据传输更安全</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BB%84%E6%88%90"><span class="toc-number">7.</span> <span class="toc-text">浏览器组成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%9C%BA%E5%88%B6"><span class="toc-number">8.</span> <span class="toc-text">浏览器事件循环机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E6%A0%88"><span class="toc-number">8.1.</span> <span class="toc-text">执行栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E9%98%9F%E5%88%97"><span class="toc-number">8.2.</span> <span class="toc-text">任务队列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E9%A6%96%E5%B1%8F%E5%8A%A0%E8%BD%BD%E6%97%B6%E9%97%B4"><span class="toc-number">9.</span> <span class="toc-text">优化首屏加载时间</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&text=浏览器"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&title=浏览器"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&is_video=false&description=浏览器"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=浏览器&body=Check out this article: https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&title=浏览器"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&title=浏览器"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&title=浏览器"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&title=浏览器"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&name=浏览器&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E6%B5%8F%E8%A7%88%E5%99%A8/&t=浏览器"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    BenGuanRan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/blog/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/blog/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+    <!-- jquery -->
+ 
+  
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+   
+    
+<script src="/blog/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

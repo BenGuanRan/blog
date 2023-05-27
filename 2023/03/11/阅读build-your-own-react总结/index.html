@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="概要原文出处：build-your-own-react该文章旨在通过以下几步引导读者创建自己的React：  Step I: The createElement Function Step II: The render Function Step III: Concurrent Mode Step IV: Fibers Step V: Render and Commit Phases Step V">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阅读build-your-own-react总结">
+<meta property="og:url" content="https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="BenGuanRan&#39;s Blog">
+<meta property="og:description" content="概要原文出处：build-your-own-react该文章旨在通过以下几步引导读者创建自己的React：  Step I: The createElement Function Step II: The render Function Step III: Concurrent Mode Step IV: Fibers Step V: Render and Commit Phases Step V">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s1.ax1x.com/2023/03/20/pptfcAP.png">
+<meta property="og:image" content="https://s1.ax1x.com/2023/03/20/ppthcr9.png">
+<meta property="article:published_time" content="2023-03-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-03-20T08:33:13.752Z">
+<meta property="article:author" content="BenGuanRan">
+<meta property="article:tag" content="React">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2023/03/20/pptfcAP.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>阅读build-your-own-react总结</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/blog/2023/03/12/RN-%E5%85%A5%E9%97%A8/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/blog/2023/03/02/%E5%A0%86/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&text=阅读build-your-own-react总结"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&title=阅读build-your-own-react总结"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&is_video=false&description=阅读build-your-own-react总结"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=阅读build-your-own-react总结&body=Check out this article: https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&title=阅读build-your-own-react总结"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&title=阅读build-your-own-react总结"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&title=阅读build-your-own-react总结"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&title=阅读build-your-own-react总结"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&name=阅读build-your-own-react总结&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&t=阅读build-your-own-react总结"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">概要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-I-The-createElement-Function"><span class="toc-number">2.</span> <span class="toc-text">Step I: The createElement Function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-II-The-render-Function"><span class="toc-number">3.</span> <span class="toc-text">Step II: The render Function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-III-Concurrent-Mode"><span class="toc-number">4.</span> <span class="toc-text">Step III: Concurrent Mode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fibers"><span class="toc-number">5.</span> <span class="toc-text">Fibers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-V-Render-and-Commit-Phases"><span class="toc-number">6.</span> <span class="toc-text">Step V: Render and Commit Phases</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-VI-Reconciliation%EF%BC%88%E8%B0%83%E5%92%8C%E9%98%B6%E6%AE%B5%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">Step VI: Reconciliation（调和阶段）</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        阅读build-your-own-react总结
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">BenGuanRan</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-03-10T16:00:00.000Z" itemprop="datePublished">2023-03-11</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/React/" rel="tag">React</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>原文出处：<a target="_blank" rel="noopener" href="https://pomb.us/build-your-own-react/">build-your-own-react</a><br>该文章旨在通过以下几步引导读者创建自己的React：</p>
+<ul>
+<li>Step I: The createElement Function</li>
+<li>Step II: The render Function</li>
+<li>Step III: Concurrent Mode</li>
+<li>Step IV: Fibers</li>
+<li>Step V: Render and Commit Phases</li>
+<li>Step VI: Reconciliation</li>
+<li>Step VII: Function Components</li>
+<li>Step VIII: Hooks</li>
+</ul>
+<h2 id="Step-I-The-createElement-Function"><a href="#Step-I-The-createElement-Function" class="headerlink" title="Step I: The createElement Function"></a>Step I: The createElement Function</h2><p><strong>createElement 函数的作用是根据指定的第一个参数创建一个React元素，可以用JSX来替代</strong><br><strong>下面是createElement的模拟代码：</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">createElement</span>(<span class="params">type, props, ...children</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    type,</span><br><span class="line">    <span class="attr">props</span>: &#123;</span><br><span class="line">      ...props,</span><br><span class="line">      <span class="attr">children</span>: children.<span class="title function_">map</span>(<span class="function"><span class="params">child</span> =&gt;</span></span><br><span class="line">        <span class="keyword">typeof</span> child === <span class="string">&quot;object&quot;</span></span><br><span class="line">          ? child</span><br><span class="line">          : <span class="title function_">createTextElement</span>(child)</span><br><span class="line">      ),</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">createTextElement</span>(<span class="params">text</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="string">&quot;TEXT_ELEMENT&quot;</span>,</span><br><span class="line">    <span class="attr">props</span>: &#123;</span><br><span class="line">      <span class="attr">nodeValue</span>: text,</span><br><span class="line">      <span class="attr">children</span>: [],</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//JSX写法：</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Hello</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">    <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>Hello, &#123; this.props.toWhat &#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">Hello</span> <span class="attr">toWhat</span>=<span class="string">‘world’</span>&gt;</span>,</span></span><br><span class="line"><span class="language-xml">    document.getElementById(‘root’)</span></span><br><span class="line"><span class="language-xml">)</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 转化为原生JS后的写法</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Hello</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">    <span class="title function_">render</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title class_">React</span>.<span class="title function_">createElement</span>(‘div’,<span class="literal">null</span>, <span class="string">`Hello,<span class="subst">$&#123;<span class="variable language_">this</span>.props.toWhat&#125;</span>`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(</span><br><span class="line">    <span class="title class_">React</span>.<span class="title function_">createElement</span>(‘<span class="title class_">Hello</span>’, &#123; <span class="attr">toWhat</span>: ‘world’ &#125;, <span class="literal">null</span>),</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(‘root’)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-II-The-render-Function"><a href="#Step-II-The-render-Function" class="headerlink" title="Step II: The render Function"></a>Step II: The render Function</h2><p><strong>render函数主要的作用就是将虚拟dom转化为真实dom，并挂载到container容器上。</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以下代码只是第一版本，递归操作会有问题，后续步骤中会修改。</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Once we start rendering, we won’t stop until we have rendered the complete element tree. If the element tree is big, it may block the main thread for too long. And if the browser needs to do high priority stuff like handling user input or keeping an animation smooth, it will have to wait until the render finishes.(递归操作的问题)</span></span><br><span class="line"><span class="comment">*/</span> </span><br><span class="line"><span class="keyword">function</span> <span class="title function_">render</span>(<span class="params">element, container</span>) &#123;</span><br><span class="line">    <span class="comment">// 根据ract元素类型不同创建相应的dom节点</span></span><br><span class="line">    <span class="keyword">const</span> dom = element.<span class="property">type</span> === <span class="string">&#x27;TEXT_ELEMENT&#x27;</span></span><br><span class="line">        ? <span class="variable language_">document</span>.<span class="title function_">createTextNode</span>(<span class="string">&quot;&quot;</span>)</span><br><span class="line">        : <span class="variable language_">document</span>.<span class="title function_">createElement</span>(element.<span class="property">type</span>)</span><br><span class="line">    <span class="comment">// 将props上记录的非children属性添加到dom上</span></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">isProperty</span> = key =&gt; key !== <span class="string">&quot;children&quot;</span></span><br><span class="line">    <span class="title class_">Object</span>.<span class="title function_">keys</span>(element.<span class="property">props</span>)</span><br><span class="line">        .<span class="title function_">filter</span>(isProperty)</span><br><span class="line">        .<span class="title function_">forEach</span>(<span class="function"><span class="params">name</span> =&gt;</span> &#123;</span><br><span class="line">            dom[name] = element.<span class="property">props</span>[name]</span><br><span class="line">        &#125;)</span><br><span class="line">    <span class="comment">// 便利子节点，递归创建真是DOM</span></span><br><span class="line">    element.<span class="property">props</span>.<span class="property">children</span>.<span class="title function_">forEach</span>(<span class="function"><span class="params">child</span> =&gt;</span></span><br><span class="line">        <span class="title function_">render</span>(child, dom)</span><br><span class="line">    )</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 虚拟DOM转化来的真是DOM挂载到container上</span></span><br><span class="line">    container.<span class="title function_">appendChild</span>(dom)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-III-Concurrent-Mode"><a href="#Step-III-Concurrent-Mode" class="headerlink" title="Step III: Concurrent Mode"></a>Step III: Concurrent Mode</h2><p><strong>考虑到上述版本的render函数无法打断的问题，这一步骤将render函数进行改良。</strong>So we are going to break the work into small units, and after we finish each unit we’ll let the browser interrupt the rendering if there’s anything else that needs to be done.<br><strong>requestIdleCallback函数</strong>React-render并发模式的救世主，以下是MDN对该函数的介绍：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">window.requestIdleCallback() 方法插入一个函数，这个函数将在浏览器空闲时期被调用。这使开发者能够在主事件循环上执行后台和低优先级工作，而不会影响延迟关键事件，如动画和输入响应。函数一般会按先进先调用的顺序执行，然而，如果回调函数指定了执行超时时间timeout，则有可能为了在超时前执行函数而打乱执行顺序。</span><br></pre></td></tr></table></figure>
+<p>注意：该函数只是在React早期版本使用，后期版本中采用<strong>scheduler package</strong>的方式，但原理都是充分利用了浏览器空闲时期。<br>那么问题来了，传统的虚拟DOM无法适应这种打断机制，因此React中采用了<strong>Fibers</strong>架构，来配合这种能够随时打断并回复执行的机制。</p>
+<h2 id="Fibers"><a href="#Fibers" class="headerlink" title="Fibers"></a>Fibers</h2><p>React为每一个Element提供一个Fiber。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 假设想要渲染的元素树如下所示：</span></span><br><span class="line"><span class="title class_">Didact</span>.<span class="title function_">render</span>(</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">a</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">h2</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>,</span><br><span class="line">  container</span><br><span class="line">)<span class="string">`</span></span><br></pre></td></tr></table></figure>
+<p>对应的Fibers Tree如下图：<br><a target="_blank" rel="noopener" href="https://imgse.com/i/pptfcAP"><img src="https://s1.ax1x.com/2023/03/20/pptfcAP.png" alt="pptfcAP.png"></a></p>
+<p>这种数据结构的目标之一是使查找下一个工作单元变得容易。这就是为什么每个Fiber都有一个链接到它的第一个孩子、下一个兄弟姐妹和它的父母。<br><strong>Fiber工作的机制：</strong><br>从根出发，孩子作为下一个工作单元，若没有孩子，则兄弟节点作为下一个工作单元，若既没有孩子也没有兄弟，则向上寻找其叔叔节点，也就是父亲节点的兄弟节点，直到再次回到兄弟节点为止。上述过程的顺序如下图：<br><a target="_blank" rel="noopener" href="https://imgse.com/i/ppthcr9"><img src="https://s1.ax1x.com/2023/03/20/ppthcr9.png" alt="ppthcr9.png"></a></p>
+<h2 id="Step-V-Render-and-Commit-Phases"><a href="#Step-V-Render-and-Commit-Phases" class="headerlink" title="Step V: Render and Commit Phases"></a>Step V: Render and Commit Phases</h2><p>由于React在Fiber渲染阶段可以随时被打断，若渲染之后立即提交的话，用户会看到不完整的UI，因为渲染随时可能被更高优先级的事件打断。因此在整个Fibers Tree渲染完成之前，React是不会进行提交操作的，也就是不会渲染真实DOM</p>
+<h2 id="Step-VI-Reconciliation（调和阶段）"><a href="#Step-VI-Reconciliation（调和阶段）" class="headerlink" title="Step VI: Reconciliation（调和阶段）"></a>Step VI: Reconciliation（调和阶段）</h2><p>将render函数上接的元素与提交给DOM的最后一个元素Fiber进行对比。<br>因此在每次提交之前需要保存本次的FiberTree，这里叫currentRoot
+ </p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/search/">Search</a></li>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/archives/">writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li>
+         
+          <li><a href="/blog/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">概要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-I-The-createElement-Function"><span class="toc-number">2.</span> <span class="toc-text">Step I: The createElement Function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-II-The-render-Function"><span class="toc-number">3.</span> <span class="toc-text">Step II: The render Function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-III-Concurrent-Mode"><span class="toc-number">4.</span> <span class="toc-text">Step III: Concurrent Mode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fibers"><span class="toc-number">5.</span> <span class="toc-text">Fibers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-V-Render-and-Commit-Phases"><span class="toc-number">6.</span> <span class="toc-text">Step V: Render and Commit Phases</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-VI-Reconciliation%EF%BC%88%E8%B0%83%E5%92%8C%E9%98%B6%E6%AE%B5%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">Step VI: Reconciliation（调和阶段）</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&text=阅读build-your-own-react总结"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&title=阅读build-your-own-react总结"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&is_video=false&description=阅读build-your-own-react总结"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=阅读build-your-own-react总结&body=Check out this article: https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&title=阅读build-your-own-react总结"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&title=阅读build-your-own-react总结"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&title=阅读build-your-own-react总结"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&title=阅读build-your-own-react总结"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&name=阅读build-your-own-react总结&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2023/03/11/%E9%98%85%E8%AF%BBbuild-your-own-react%E6%80%BB%E7%BB%93/&t=阅读build-your-own-react总结"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    BenGuanRan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/blog/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/blog/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+    <!-- jquery -->
+ 
+  
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+   
+    
+<script src="/blog/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="前言在Nextjs入门中我们说过，Next分为两种渲染模式，SSR&#x2F;SG。针对这两种不同的渲染模式，Nextjs提供给了不同的API进行服务端的数据获取操作。  getStaticProps：（SG）build时获取数据 getStaticPaths：（SG）获取动态路由数据 getServerSideProps：（SSR）获取每次请求的数据  getStaticProps（SG）Nex">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nextjs数据获取（Data Fetching）">
+<meta property="og:url" content="https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/index.html">
+<meta property="og:site_name" content="BenGuanRan&#39;s Blog">
+<meta property="og:description" content="前言在Nextjs入门中我们说过，Next分为两种渲染模式，SSR&#x2F;SG。针对这两种不同的渲染模式，Nextjs提供给了不同的API进行服务端的数据获取操作。  getStaticProps：（SG）build时获取数据 getStaticPaths：（SG）获取动态路由数据 getServerSideProps：（SSR）获取每次请求的数据  getStaticProps（SG）Nex">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-04-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-08T01:35:32.670Z">
+<meta property="article:author" content="BenGuanRan">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="Nextjs">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Nextjs数据获取（Data Fetching）</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/blog/2023/05/09/Nextjs%E5%9F%BA%E6%9C%AC%E7%89%B9%E6%80%A7/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/blog/2023/04/09/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%8C%87%E6%A0%87/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&text=Nextjs数据获取（Data Fetching）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&title=Nextjs数据获取（Data Fetching）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&is_video=false&description=Nextjs数据获取（Data Fetching）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Nextjs数据获取（Data Fetching）&body=Check out this article: https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&title=Nextjs数据获取（Data Fetching）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&title=Nextjs数据获取（Data Fetching）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&title=Nextjs数据获取（Data Fetching）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&title=Nextjs数据获取（Data Fetching）"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&name=Nextjs数据获取（Data Fetching）&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&t=Nextjs数据获取（Data Fetching）"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getStaticProps%EF%BC%88SG%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">getStaticProps（SG）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getStaticPaths%EF%BC%88SG%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">getStaticPaths（SG）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getSeverSideProps%EF%BC%88SSR%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">getSeverSideProps（SSR）</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Nextjs数据获取（Data Fetching）
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">BenGuanRan</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-04-12T16:00:00.000Z" itemprop="datePublished">2023-04-13</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/Nextjs/" rel="tag">Nextjs</a>, <a class="tag-link-link" href="/blog/tags/React/" rel="tag">React</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在Nextjs入门中我们说过，Next分为两种渲染模式，SSR&#x2F;SG。针对这两种不同的渲染模式，Nextjs提供给了不同的API进行服务端的数据获取操作。</p>
+<ul>
+<li><code>getStaticProps</code>：（SG）build时获取数据</li>
+<li><code>getStaticPaths</code>：（SG）获取动态路由数据</li>
+<li><code>getServerSideProps</code>：（SSR）获取每次请求的数据</li>
+</ul>
+<h2 id="getStaticProps（SG）"><a href="#getStaticProps（SG）" class="headerlink" title="getStaticProps（SG）"></a>getStaticProps（SG）</h2><p>Next会在build时自动调用此函数，并且将返回值注入到组件的props参数中。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getStaticProps</span>(<span class="params">context</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">props</span>: &#123;&#125;, <span class="comment">// will be passed to the page component as props</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回值是一个对象，允许有以下属性：</p>
+<ul>
+<li>props，向组件props属性中注入</li>
+<li>revalidate，决定x秒后重新生成还是使用缓存，若为true则每次请求都进行重新生成</li>
+<li>notFound，允许返回一个404页面<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getStaticProps</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="title function_">requestData</span>(<span class="number">500</span>)</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="attr">props</span>: &#123;</span><br><span class="line">                data</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123; <span class="attr">notFound</span>: <span class="literal">true</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>Incremental Static Regeneration（ISG）</strong><br>允许在静态页面生成之后进行创建或更新静态页面，这就要利用getStaticProps返回值中的<strong>revalidate</strong>属性。</p>
+<h2 id="getStaticPaths（SG）"><a href="#getStaticPaths（SG）" class="headerlink" title="getStaticPaths（SG）"></a>getStaticPaths（SG）</h2><p>如果页面具有动态路由，getStaticsPaths则需要定义一个路径列表。<br><strong>如果从使用动态路由的页面导出名为getStaticPaths的异步函数，Next.js将静态预渲染getStaticPath指定的所有路径。</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getStaticPaths</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">paths</span>: [</span><br><span class="line">      &#123; <span class="attr">params</span>: &#123; ... &#125; &#125; <span class="comment">// See the &quot;paths&quot; section below</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">fallback</span>: <span class="literal">true</span>, <span class="literal">false</span>, or <span class="string">&#x27;blocking&#x27;</span> <span class="comment">// See the &quot;fallback&quot; section below</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个小栗子如下：<br>在一个名为[id].tsx文件夹下：</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">Page</span>(<span class="params">&#123; name &#125;: &#123; name: <span class="built_in">string</span> &#125;</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>这是一篇有关&#123;name&#125;的文章<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getStaticPaths</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> posts = [<span class="string">&#x27;html&#x27;</span>, <span class="string">&#x27;css&#x27;</span>, <span class="string">&#x27;js&#x27;</span>]</span><br><span class="line">    <span class="keyword">const</span> paths = posts.<span class="title function_">map</span>(<span class="function">(<span class="params">post</span>) =&gt;</span> (&#123;</span><br><span class="line">        <span class="attr">params</span>: &#123; <span class="attr">id</span>: post &#125;,</span><br><span class="line">    &#125;))</span><br><span class="line">    <span class="keyword">return</span> &#123; paths, <span class="attr">fallback</span>: <span class="literal">true</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getStaticProps</span>(<span class="params">&#123; params &#125;: <span class="built_in">any</span></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">props</span>: &#123; <span class="attr">name</span>: params.<span class="property">id</span> &#125; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>注意：不能将getStaticPaths与getServerSideProps一起使用。</strong></p>
+<h2 id="getSeverSideProps（SSR）"><a href="#getSeverSideProps（SSR）" class="headerlink" title="getSeverSideProps（SSR）"></a>getSeverSideProps（SSR）</h2><p>若页面导出了一个异步函数名为getSeverSideProps，则Next默认会开启SSR模式。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getServerSideProps</span>(<span class="params">context</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">props</span>: &#123;&#125;, <span class="comment">// will be passed to the page component as props</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中context是一个对象，包含属性如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">context.<span class="property">req</span>: 该属性是一个 <span class="title class_">Node</span>.<span class="property">js</span> 的 http.<span class="property">IncomingMessage</span> 对象，它包含了来自客户端的请求信息，例如请求头、请求方法等等。</span><br><span class="line">context.<span class="property">res</span>: 该属性是一个 <span class="title class_">Node</span>.<span class="property">js</span> 的 http.<span class="property">ServerResponse</span> 对象，它用于向客户端发送响应，例如设置响应头、响应状态码等等。</span><br><span class="line">context.<span class="property">query</span>: 该属性是一个对象，它包含了来自客户端的查询参数，例如 ?id=<span class="number">123</span> 中的 id 参数可以通过 context.<span class="property">query</span>.<span class="property">id</span> 获取。</span><br><span class="line">context.<span class="property">params</span>: 该属性是一个对象，它包含了路由参数，例如路由为 /posts/[id]，则访问 /posts/<span class="number">123</span> 时，context.<span class="property">params</span> 中会包含 &#123; <span class="attr">id</span>: <span class="string">&#x27;123&#x27;</span> &#125;。</span><br><span class="line">context.<span class="property">preview</span>: 该属性是一个布尔值，用于判断是否为预览模式，如果是预览模式，则可以显示未发布的内容。</span><br><span class="line">context.<span class="property">resolvedUrl</span>: 该属性是一个字符串，它表示在 <span class="title class_">Next</span>.<span class="property">js</span> 内部解析后的 <span class="variable constant_">URL</span>，通常与 context.<span class="property">req</span>.<span class="property">url</span> 不同，因为 <span class="title class_">Next</span>.<span class="property">js</span> 可以通过路由配置将一个 <span class="variable constant_">URL</span> 映射到另一个 <span class="variable constant_">URL</span>。</span><br></pre></td></tr></table></figure>
+<p>其中返回对象包含属性如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">props</span>: 表示页面渲染所需的数据，它是一个对象。</span><br><span class="line"><span class="attr">redirect</span>: 表示将用户重定向到另一个页面，它是一个对象，包含以下属性：</span><br><span class="line">  - <span class="attr">destination</span>: 表示重定向的目标页面的 <span class="variable constant_">URL</span>。</span><br><span class="line">  - <span class="attr">permanent</span>: 表示重定向的类型，如果为 <span class="literal">true</span>，则表示为永久重定向（<span class="number">301</span>），如果为 <span class="literal">false</span>，则表示为临时重定向（<span class="number">302</span>）。</span><br><span class="line"><span class="attr">notFound</span>: 表示页面不存在，它是一个布尔值，默认为 <span class="literal">false</span>。如果设置为 <span class="literal">true</span>，则会显示 <span class="number">404</span> 页面。</span><br><span class="line"><span class="attr">revalidate</span>: 表示页面的重新验证时间（revalidation time），它是一个数字，表示在指定的秒数内不需要重新生成页面。如果不设置该属性，则页面将在每个请求时重新生成。设置为 <span class="literal">false</span> 则表示该页面不应该被缓存。</span><br><span class="line"><span class="attr">dehydratedState</span>: 表示传递给客户端的静态页面数据。如果启用了 hybrid 模式，客户端将使用该数据进行初次渲染。</span><br><span class="line"><span class="attr">preview</span>: 表示是否启用预览模式，它是一个对象，包含以下属性：</span><br><span class="line">  - <span class="attr">active</span>: 表示是否启用预览模式，它是一个布尔值，默认为 <span class="literal">false</span>。</span><br><span class="line">  - <span class="attr">data</span>: 表示预览模式所使用的数据，它是一个对象。</span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/search/">Search</a></li>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/archives/">writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li>
+         
+          <li><a href="/blog/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getStaticProps%EF%BC%88SG%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">getStaticProps（SG）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getStaticPaths%EF%BC%88SG%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">getStaticPaths（SG）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getSeverSideProps%EF%BC%88SSR%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">getSeverSideProps（SSR）</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&text=Nextjs数据获取（Data Fetching）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&title=Nextjs数据获取（Data Fetching）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&is_video=false&description=Nextjs数据获取（Data Fetching）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Nextjs数据获取（Data Fetching）&body=Check out this article: https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&title=Nextjs数据获取（Data Fetching）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&title=Nextjs数据获取（Data Fetching）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&title=Nextjs数据获取（Data Fetching）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&title=Nextjs数据获取（Data Fetching）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&name=Nextjs数据获取（Data Fetching）&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2023/04/13/Nextjs%E6%95%B0%E6%8D%AE%E8%8E%B7%E5%8F%96/&t=Nextjs数据获取（Data Fetching）"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    BenGuanRan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/blog/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/blog/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+    <!-- jquery -->
+ 
+  
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+   
+    
+<script src="/blog/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

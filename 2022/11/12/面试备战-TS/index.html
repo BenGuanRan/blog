@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="声明数组1var numlist:number[] &#x3D; [2,4,6,8]  如果元素不同，则是元组联合类型1Type1|Type2|Type3  接口（interface）一系列抽象方法的声明，是一些方法特征的集合 123456789101112131415161718interface IPerson &amp;#123;    firstName: string,    lastName: stri">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ts小总结">
+<meta property="og:url" content="https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/index.html">
+<meta property="og:site_name" content="BenGuanRan&#39;s Blog">
+<meta property="og:description" content="声明数组1var numlist:number[] &#x3D; [2,4,6,8]  如果元素不同，则是元组联合类型1Type1|Type2|Type3  接口（interface）一系列抽象方法的声明，是一些方法特征的集合 123456789101112131415161718interface IPerson &amp;#123;    firstName: string,    lastName: stri">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-11-11T16:03:54.000Z">
+<meta property="article:modified_time" content="2023-05-07T04:43:52.186Z">
+<meta property="article:author" content="BenGuanRan">
+<meta property="article:tag" content="Ts">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Ts小总结</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/blog/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Git/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/blog/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vite/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&text=Ts小总结"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&title=Ts小总结"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&is_video=false&description=Ts小总结"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Ts小总结&body=Check out this article: https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&title=Ts小总结"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&title=Ts小总结"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&title=Ts小总结"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&title=Ts小总结"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&name=Ts小总结&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&t=Ts小总结"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A3%B0%E6%98%8E%E6%95%B0%E7%BB%84"><span class="toc-number">1.</span> <span class="toc-text">声明数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E5%85%83%E7%B4%A0%E4%B8%8D%E5%90%8C%EF%BC%8C%E5%88%99%E6%98%AF%E5%85%83%E7%BB%84"><span class="toc-number">2.</span> <span class="toc-text">如果元素不同，则是元组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%94%E5%90%88%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">联合类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%EF%BC%88interface%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">接口（interface）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB"><span class="toc-number">5.</span> <span class="toc-text">类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1"><span class="toc-number">6.</span> <span class="toc-text">对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#type%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D"><span class="toc-number">7.</span> <span class="toc-text">type类型别名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%9B%E5%9E%8B"><span class="toc-number">8.</span> <span class="toc-text">泛型</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Ts小总结
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">BenGuanRan</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-11-11T16:03:54.000Z" itemprop="datePublished">2022-11-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/Ts/" rel="tag">Ts</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="声明数组"><a href="#声明数组" class="headerlink" title="声明数组"></a><strong>声明数组</strong></h2><figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="attr">numlist</span>:<span class="built_in">number</span>[] = [<span class="number">2</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">8</span>]</span><br></pre></td></tr></table></figure>
+
+<h2 id="如果元素不同，则是元组"><a href="#如果元素不同，则是元组" class="headerlink" title="如果元素不同，则是元组"></a><strong>如果元素不同，则是元组</strong></h2><h2 id="联合类型"><a href="#联合类型" class="headerlink" title="联合类型"></a><strong>联合类型</strong></h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Type1</span>|<span class="title class_">Type2</span>|<span class="title class_">Type3</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="接口（interface）"><a href="#接口（interface）" class="headerlink" title="接口（interface）"></a>接口（interface）</h2><p>一系列抽象方法的声明，是一些方法特征的集合</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">interface <span class="title class_">IPerson</span> &#123;</span><br><span class="line">    <span class="attr">firstName</span>: string,</span><br><span class="line">    <span class="attr">lastName</span>: string,</span><br><span class="line">    <span class="attr">sayHi</span>: <span class="function">() =&gt;</span> string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="attr">customer</span>: <span class="title class_">IPerson</span> = &#123;</span><br><span class="line">    <span class="attr">firstName</span>: <span class="string">&quot;Tom&quot;</span>,</span><br><span class="line">    <span class="attr">lastName</span>: <span class="string">&quot;Hanks&quot;</span>,</span><br><span class="line">    <span class="attr">sayHi</span>: (): <span class="function"><span class="params">string</span> =&gt;</span> &#123; <span class="keyword">return</span> <span class="string">&quot;Hi there&quot;</span> &#125;</span><br><span class="line">&#125; </span><br><span class="line"><span class="comment">// 也可以这样写</span></span><br><span class="line"><span class="comment">// var customer = &lt;IPerson&gt;&#123;</span></span><br><span class="line"><span class="comment">//     firstName: &quot;Tom&quot;,</span></span><br><span class="line"><span class="comment">//     lastName: &quot;Hanks&quot;,</span></span><br><span class="line"><span class="comment">//     sayHi: (): string =&gt; &#123; return &quot;Hi there&quot; &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(customer);</span><br></pre></td></tr></table></figure>
+
+<p><strong>联合类型+接口</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">interface <span class="title class_">IPerson</span> &#123;</span><br><span class="line">    <span class="attr">name</span>: string | string[]</span><br><span class="line">    <span class="attr">sayHi</span>: <span class="function">() =&gt;</span> string | <span class="keyword">void</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> <span class="attr">customer</span>: <span class="title class_">IPerson</span> = &#123;</span><br><span class="line">    <span class="attr">name</span>: [<span class="string">&quot;Hanks&quot;</span>, <span class="string">&#x27;aa&#x27;</span>],</span><br><span class="line">    <span class="attr">sayHi</span>: (): <span class="function"><span class="params">void</span> =&gt;</span> &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(customer);</span><br></pre></td></tr></table></figure>
+
+<p><strong>数组+接口</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">interface A &#123;</span><br><span class="line">    [<span class="attr">index</span>: number]: string | number</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> <span class="attr">a</span>: A = [<span class="string">&#x27;1&#x27;</span>, <span class="number">1</span>]</span><br><span class="line"><span class="keyword">const</span> b = &#123;</span><br><span class="line">    <span class="string">&#x27;0&#x27;</span>: <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;1&#x27;</span>: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a,b);</span><br><span class="line"></span><br><span class="line">interface namelist &#123;</span><br><span class="line">    [<span class="attr">index</span>: number]: string</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 类型一致，正确</span></span><br><span class="line"><span class="keyword">const</span> <span class="attr">list2</span>: namelist = [<span class="string">&quot;Google&quot;</span>, <span class="string">&quot;Runoob&quot;</span>, <span class="string">&quot;Taobao&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<p><strong>接口继承</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Child</span>_interface_name <span class="keyword">extends</span> super_interface1_name, super_interface2_name,…,super_interfaceN_name</span><br></pre></td></tr></table></figure>
+
+<h2 id="类"><a href="#类" class="headerlink" title="类"></a>类</h2><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">class_name</span> &#123; </span><br><span class="line">    <span class="comment">// 类作用域</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Car</span> &#123; </span><br><span class="line">   <span class="comment">// 字段</span></span><br><span class="line">   <span class="attr">engine</span>:string; </span><br><span class="line">   </span><br><span class="line">   <span class="comment">// 构造函数</span></span><br><span class="line">   <span class="title function_">constructor</span>(<span class="params">engine:string</span>) &#123; </span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">engine</span> = engine </span><br><span class="line">   &#125;  </span><br><span class="line">   </span><br><span class="line">   <span class="comment">// 方法</span></span><br><span class="line">   <span class="title function_">disp</span>():<span class="keyword">void</span> &#123; </span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;函数中显示发动机型号  :   &quot;</span>+<span class="variable language_">this</span>.<span class="property">engine</span>) </span><br><span class="line">   &#125; </span><br><span class="line">&#125; </span><br><span class="line"> </span><br><span class="line"><span class="comment">// 创建一个对象</span></span><br><span class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> <span class="title class_">Car</span>(<span class="string">&quot;XXSY1&quot;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 访问字段</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;读取发动机型号 :  &quot;</span>+obj.<span class="property">engine</span>)  </span><br><span class="line"> </span><br><span class="line"><span class="comment">// 访问方法</span></span><br><span class="line">obj.<span class="title function_">disp</span>()</span><br></pre></td></tr></table></figure>
+
+<p><strong>TS一次只支持继承一个类，并不支持一次继承多个类，这一点区别于TS接口</strong></p>
+<p><strong>继承</strong></p>
+<p>super是对父类的直接引用</p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Father</span> &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="built_in">string</span></span><br><span class="line">    <span class="attr">job</span>: <span class="built_in">string</span></span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params">name: <span class="built_in">string</span>, job: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">job</span> = job</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">doJob</span>(<span class="attr">job</span>: <span class="built_in">string</span> | <span class="built_in">void</span>): <span class="built_in">string</span> &#123;</span><br><span class="line">        job = job || <span class="variable language_">this</span>.<span class="property">job</span></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;我正在做&#x27;</span> + job);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;我正在做&#x27;</span> + job</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Son</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Father</span> &#123;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params">name: <span class="built_in">string</span>, job: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">super</span>(name, job)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">doJob</span>(): <span class="built_in">string</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;我正在学&#x27;</span> + <span class="variable language_">this</span>.<span class="property">job</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;我正在学&#x27;</span> + <span class="variable language_">this</span>.<span class="property">job</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">fatherJob</span>(): <span class="built_in">void</span> &#123;</span><br><span class="line">        <span class="variable language_">super</span>.<span class="title function_">doJob</span>(<span class="string">&#x27;监督儿子&#x27;</span> + <span class="variable language_">this</span>.<span class="property">job</span> + <span class="string">&#x27;的工作&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> f = <span class="keyword">new</span> <span class="title class_">Father</span>(<span class="string">&#x27;Bob&#x27;</span>, <span class="string">&#x27;司机&#x27;</span>)</span><br><span class="line">f.<span class="title function_">doJob</span>()</span><br><span class="line"><span class="keyword">const</span> s = <span class="keyword">new</span> <span class="title class_">Son</span>(<span class="string">&#x27;Mack&#x27;</span>, <span class="string">&#x27;Ts&#x27;</span>)</span><br><span class="line">s.<span class="title function_">doJob</span>()</span><br><span class="line">s.<span class="title function_">fatherJob</span>()</span><br></pre></td></tr></table></figure>
+
+<p><strong>访问控制</strong></p>
+<ul>
+<li><strong>public（默认）</strong> : 公有，可以在任何地方被访问。</li>
+<li><strong>protected</strong> : 受保护，可以被其自身以及其子类访问。</li>
+<li><strong>private</strong> : 私有，只能被其定义所在的类访问。</li>
+</ul>
+<p><strong>实现接口（implements）</strong></p>
+<figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">ILoan</span> &#123; </span><br><span class="line">   <span class="attr">interest</span>:<span class="built_in">number</span> </span><br><span class="line">&#125; </span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AgriLoan</span> <span class="keyword">implements</span> <span class="title class_">ILoan</span> &#123; </span><br><span class="line">   <span class="attr">interest</span>:<span class="built_in">number</span> </span><br><span class="line">   <span class="attr">rebate</span>:<span class="built_in">number</span> </span><br><span class="line">   </span><br><span class="line">   <span class="title function_">constructor</span>(<span class="params">interest:<span class="built_in">number</span>,rebate:<span class="built_in">number</span></span>) &#123; </span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">interest</span> = interest </span><br><span class="line">      <span class="variable language_">this</span>.<span class="property">rebate</span> = rebate </span><br><span class="line">   &#125; </span><br><span class="line">&#125; </span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> obj = <span class="keyword">new</span> <span class="title class_">AgriLoan</span>(<span class="number">10</span>,<span class="number">1</span>) </span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;利润为 : &quot;</span>+obj.<span class="property">interest</span>+<span class="string">&quot;，抽成为 : &quot;</span>+obj.<span class="property">rebate</span> )</span><br></pre></td></tr></table></figure>
+
+<h2 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h2><figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ts中对象是事先定义好的模板，不能自己再添加属性</span><br><span class="line"><span class="keyword">const</span> m = &#123;</span><br><span class="line">    <span class="attr">x</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="comment">// a: (): void =&gt; &#123; &#125;</span></span><br><span class="line">&#125;</span><br><span class="line">m.<span class="property">a</span> = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 上述是不被允许的</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="type类型别名"><a href="#type类型别名" class="headerlink" title="type类型别名"></a>type类型别名</h2><figure class="highlight tsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="variable constant_">AB</span> = &#123;</span><br><span class="line">    name?: <span class="built_in">string</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="built_in">number</span>,</span><br><span class="line">    <span class="attr">c</span>: <span class="string">&#x27;1&#x27;</span> | <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> <span class="attr">d</span>: <span class="variable constant_">AB</span> = &#123;</span><br><span class="line">    <span class="attr">age</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">c</span>: <span class="number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h2><p>一个简单的泛型例子：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> func&lt;T,k&gt;(<span class="attr">a</span>: T, <span class="attr">b</span>: K): k &#123;</span><br><span class="line">    <span class="keyword">return</span> b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">func</span>(<span class="string">&quot;1&quot;</span>, <span class="string">&quot;2&quot;</span>));</span><br><span class="line"><span class="comment">// ts会自动进行类型推断</span></span><br></pre></td></tr></table></figure>
+
+<p>泛型接口：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">HasLength</span> &#123;</span><br><span class="line">    <span class="attr">length</span>: <span class="built_in">number</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> func&lt;T <span class="keyword">extends</span> <span class="title class_">HasLength</span>&gt;(<span class="attr">a</span>: T): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a.<span class="property">length</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">func</span>(<span class="string">&quot;123&quot;</span>)</span><br><span class="line"><span class="title function_">func</span>(&#123;<span class="attr">length</span>:<span class="number">222</span>&#125;)</span><br><span class="line"><span class="title function_">func</span>(<span class="number">123</span>) <span class="comment">// Error</span></span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/search/">Search</a></li>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/archives/">writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li>
+         
+          <li><a href="/blog/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A3%B0%E6%98%8E%E6%95%B0%E7%BB%84"><span class="toc-number">1.</span> <span class="toc-text">声明数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E5%85%83%E7%B4%A0%E4%B8%8D%E5%90%8C%EF%BC%8C%E5%88%99%E6%98%AF%E5%85%83%E7%BB%84"><span class="toc-number">2.</span> <span class="toc-text">如果元素不同，则是元组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%94%E5%90%88%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">联合类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%EF%BC%88interface%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">接口（interface）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB"><span class="toc-number">5.</span> <span class="toc-text">类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1"><span class="toc-number">6.</span> <span class="toc-text">对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#type%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D"><span class="toc-number">7.</span> <span class="toc-text">type类型别名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%9B%E5%9E%8B"><span class="toc-number">8.</span> <span class="toc-text">泛型</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&text=Ts小总结"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&title=Ts小总结"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&is_video=false&description=Ts小总结"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Ts小总结&body=Check out this article: https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&title=Ts小总结"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&title=Ts小总结"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&title=Ts小总结"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&title=Ts小总结"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&name=Ts小总结&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/11/12/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-TS/&t=Ts小总结"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    BenGuanRan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/blog/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/blog/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+    <!-- jquery -->
+ 
+  
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+   
+    
+<script src="/blog/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Ts类型体操该篇博文主要记录自己刷Ts类型体操的过程。附上刷题链接 实现Pick实现 TS 内置的 Pick&lt;T, K&gt;，但不可以使用它。从类型 T 中选择出属性 K，构造成一个新的类型。 123type Pick&lt;T, K extends keyof T&gt; &#x3D; &amp;#123;    [p in K]:T[p]&amp;#125;  实现Readonly该 Readonly 会接收一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ts类型体操">
+<meta property="og:url" content="https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/index.html">
+<meta property="og:site_name" content="BenGuanRan&#39;s Blog">
+<meta property="og:description" content="Ts类型体操该篇博文主要记录自己刷Ts类型体操的过程。附上刷题链接 实现Pick实现 TS 内置的 Pick&lt;T, K&gt;，但不可以使用它。从类型 T 中选择出属性 K，构造成一个新的类型。 123type Pick&lt;T, K extends keyof T&gt; &#x3D; &amp;#123;    [p in K]:T[p]&amp;#125;  实现Readonly该 Readonly 会接收一">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-12-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-12-08T13:10:10.169Z">
+<meta property="article:author" content="BenGuanRan">
+<meta property="article:tag" content="Ts">
+<meta property="article:tag" content="Js">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Ts类型体操</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/blog/2022/12/11/React-router/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/blog/2022/12/08/Ts%E7%9A%84%E9%AD%85%E5%8A%9B/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&text=Ts类型体操"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&title=Ts类型体操"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&is_video=false&description=Ts类型体操"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Ts类型体操&body=Check out this article: https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&title=Ts类型体操"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&title=Ts类型体操"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&title=Ts类型体操"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&title=Ts类型体操"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&name=Ts类型体操&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&t=Ts类型体操"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D"><span class="toc-number">1.</span> <span class="toc-text">Ts类型体操</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0Pick"><span class="toc-number">1.1.</span> <span class="toc-text">实现Pick</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0Readonly"><span class="toc-number">1.2.</span> <span class="toc-text">实现Readonly</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%83%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.3.</span> <span class="toc-text">元组转换为对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0"><span class="toc-number">1.4.</span> <span class="toc-text">第一个元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%85%83%E7%BB%84%E9%95%BF%E5%BA%A6"><span class="toc-number">1.5.</span> <span class="toc-text">获取元组长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exclude"><span class="toc-number">1.6.</span> <span class="toc-text">Exclude</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Awaited"><span class="toc-number">1.7.</span> <span class="toc-text">Awaited</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#If"><span class="toc-number">1.8.</span> <span class="toc-text">If</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Concat"><span class="toc-number">1.9.</span> <span class="toc-text">Concat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Includes"><span class="toc-number">1.10.</span> <span class="toc-text">Includes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Push"><span class="toc-number">1.11.</span> <span class="toc-text">Push</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Ts类型体操
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">BenGuanRan</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-12-07T16:00:00.000Z" itemprop="datePublished">2022-12-08</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/Js/" rel="tag">Js</a>, <a class="tag-link-link" href="/blog/tags/Ts/" rel="tag">Ts</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Ts类型体操"><a href="#Ts类型体操" class="headerlink" title="Ts类型体操"></a>Ts类型体操</h2><p><strong>该篇博文主要记录自己刷Ts类型体操的过程。</strong><br><a target="_blank" rel="noopener" href="https://github.com/type-challenges/type-challenges/blob/main/README.zh-CN.md">附上刷题链接</a></p>
+<h3 id="实现Pick"><a href="#实现Pick" class="headerlink" title="实现Pick"></a>实现Pick</h3><p>实现 TS 内置的 Pick&lt;T, K&gt;，但不可以使用它。从类型 T 中选择出属性 K，构造成一个新的类型。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Pick</span>&lt;T, K <span class="keyword">extends</span> keyof T&gt; = &#123;</span><br><span class="line">    [p <span class="keyword">in</span> K]:T[p]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="实现Readonly"><a href="#实现Readonly" class="headerlink" title="实现Readonly"></a>实现Readonly</h3><p>该 Readonly 会接收一个 泛型参数，并返回一个完全一样的类型，只是所有属性都会被 readonly 所修饰。也就是不可以再对该对象的属性赋值。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">MyReadonly</span>&lt;T&gt; = &#123;</span><br><span class="line">    <span class="keyword">readonly</span> [k <span class="keyword">in</span> keyof T]: T[k]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="元组转换为对象"><a href="#元组转换为对象" class="headerlink" title="元组转换为对象"></a>元组转换为对象</h3><p>传入一个元组类型，将这个元组类型转换为对象类型，这个对象类型的键&#x2F;值都是从元组中遍历出来。<br>例如：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tuple = [<span class="string">&#x27;tesla&#x27;</span>, <span class="string">&#x27;model 3&#x27;</span>, <span class="string">&#x27;model X&#x27;</span>, <span class="string">&#x27;model Y&#x27;</span>] <span class="keyword">as</span> <span class="keyword">const</span></span><br><span class="line"><span class="keyword">type</span> result = <span class="title class_">TupleToObject</span>&lt;<span class="keyword">typeof</span> tuple&gt; <span class="comment">// expected &#123; &#x27;tesla&#x27;: &#x27;tesla&#x27;, &#x27;model 3&#x27;: &#x27;model 3&#x27;, &#x27;model X&#x27;: &#x27;model X&#x27;&#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">TupleToObject</span>&lt;T <span class="keyword">extends</span> <span class="keyword">readonly</span> <span class="built_in">any</span>[]&gt; = &#123;</span><br><span class="line">    [i <span class="keyword">in</span> T[<span class="built_in">number</span>]]: T[<span class="built_in">number</span>]</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> tuple = [<span class="string">&#x27;tesla&#x27;</span>, <span class="string">&#x27;model 3&#x27;</span>, <span class="string">&#x27;model X&#x27;</span>, <span class="string">&#x27;model Y&#x27;</span>] <span class="keyword">as</span> <span class="keyword">const</span></span><br><span class="line"><span class="keyword">type</span> result = <span class="title class_">TupleToObject</span>&lt;<span class="keyword">typeof</span> tuple&gt;</span><br><span class="line"><span class="keyword">const</span> <span class="attr">aa</span>: result = &#123;</span><br><span class="line">    <span class="string">&#x27;tesla&#x27;</span>: <span class="string">&#x27;tesla&#x27;</span>, <span class="string">&#x27;model 3&#x27;</span>: <span class="string">&#x27;model 3&#x27;</span>, <span class="string">&#x27;model X&#x27;</span>: <span class="string">&#x27;model X&#x27;</span>,</span><br><span class="line">    <span class="string">&quot;model Y&quot;</span>: <span class="string">&quot;tesla&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="第一个元素"><a href="#第一个元素" class="headerlink" title="第一个元素"></a>第一个元素</h3><p>实现一个通用First<T>，它接受一个数组T并返回它的第一个元素的类型。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">First</span>&lt;T <span class="keyword">extends</span> <span class="built_in">any</span>[]&gt; = T[<span class="string">&#x27;length&#x27;</span>] <span class="keyword">extends</span> <span class="number">0</span> ? <span class="built_in">never</span> : T[<span class="number">0</span>] </span><br></pre></td></tr></table></figure>
+
+<h3 id="获取元组长度"><a href="#获取元组长度" class="headerlink" title="获取元组长度"></a>获取元组长度</h3><p>创建一个通用的Length，接受一个readonly的数组，返回这个数组的长度。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Length</span>&lt;T <span class="keyword">extends</span> <span class="keyword">readonly</span> <span class="built_in">unknown</span>[]&gt; = T[<span class="string">&#x27;length&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Exclude"><a href="#Exclude" class="headerlink" title="Exclude"></a>Exclude</h3><p>从联合类型T中排除U的类型成员，来构造一个新的类型。<br>例如：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Result</span> = <span class="title class_">MyExclude</span>&lt;<span class="string">&#x27;a&#x27;</span> | <span class="string">&#x27;b&#x27;</span> | <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;a&#x27;</span>&gt; <span class="comment">// &#x27;b&#x27; | &#x27;c&#x27;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">MyExclude</span>&lt;T, U <span class="keyword">extends</span> T&gt; = T <span class="keyword">extends</span> U ? <span class="built_in">never</span> : T</span><br></pre></td></tr></table></figure>
+<p>是不是很反直觉？<br>对于联合类型使用extends，ts会进行分配类型，也就是将T的每一个累心与extends后边类型进行extends，返回每一个结果的联合类型。</p>
+<h3 id="Awaited"><a href="#Awaited" class="headerlink" title="Awaited"></a>Awaited</h3><p>假如我们有一个 Promise 对象，这个 Promise 对象会返回一个类型。在 TS 中，我们用 Promise 中的 T 来描述这个 Promise 返回的类型。请你实现一个类型，可以获取这个类型。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">ExampleType</span> = <span class="title class_">Promise</span>&lt;<span class="built_in">string</span>&gt;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Result</span> = <span class="title class_">MyAwaited</span>&lt;<span class="title class_">ExampleType</span>&gt; <span class="comment">// string</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">MyAwaited</span>&lt;T <span class="keyword">extends</span> <span class="title class_">Promise</span>&lt;<span class="built_in">any</span>&gt;&gt; = <span class="title class_">Awaited</span>&lt;T&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="If"><a href="#If" class="headerlink" title="If"></a>If</h3><p>实现一个 IF 类型，它接收一个条件类型 C ，一个判断为真时的返回类型 T ，以及一个判断为假时的返回类型 F。 C 只能是 true 或者 false， T 和 F 可以是任意类型。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">If</span>&lt;C <span class="keyword">extends</span> <span class="built_in">boolean</span>, T, F&gt; = C <span class="keyword">extends</span> <span class="literal">true</span> ? T : F</span><br></pre></td></tr></table></figure>
+
+<h3 id="Concat"><a href="#Concat" class="headerlink" title="Concat"></a>Concat</h3><p>在类型系统里实现 JavaScript 内置的 Array.concat 方法，这个类型接受两个参数，返回的新数组类型应该按照输入参数从左到右的顺序合并为一个新的数组。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Concat</span>&lt;T <span class="keyword">extends</span> <span class="built_in">any</span>[], U <span class="keyword">extends</span> <span class="built_in">any</span>[]&gt; = [...T, ...U]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Includes"><a href="#Includes" class="headerlink" title="Includes"></a>Includes</h3><p>在类型系统里实现 JavaScript 的 <code>Array.includes</code> 方法，这个类型接受两个参数，返回的类型要么是 <code>true</code> 要么是 <code>false</code>。<br>例如：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> isPillarMen = <span class="title class_">Includes</span>&lt;[<span class="string">&#x27;Kars&#x27;</span>, <span class="string">&#x27;Esidisi&#x27;</span>, <span class="string">&#x27;Wamuu&#x27;</span>, <span class="string">&#x27;Santana&#x27;</span>], <span class="string">&#x27;Dio&#x27;</span>&gt; <span class="comment">// expected to be `false`</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Includes</span>&lt;T <span class="keyword">extends</span> <span class="keyword">readonly</span> <span class="built_in">unknown</span>[], U&gt; =</span><br><span class="line">  T <span class="keyword">extends</span> [infer <span class="title class_">First</span>, ...infer <span class="title class_">Rest</span>] </span><br><span class="line">    ? <span class="title class_">Equal</span>&lt;<span class="title class_">First</span>, U&gt; <span class="keyword">extends</span> <span class="literal">true</span> ? <span class="literal">true</span> : <span class="title class_">Includes</span>&lt;<span class="title class_">Rest</span>, U&gt;</span><br><span class="line">    : <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Push"><a href="#Push" class="headerlink" title="Push"></a>Push</h3><p>在类型系统里实现通用的 <code>Array.push</code> 。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Push</span>&lt;T <span class="keyword">extends</span> <span class="built_in">any</span>[],  U <span class="keyword">extends</span> <span class="built_in">any</span>[]|<span class="built_in">any</span>&gt; = [...T,U]</span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/search/">Search</a></li>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/archives/">writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li>
+         
+          <li><a href="/blog/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D"><span class="toc-number">1.</span> <span class="toc-text">Ts类型体操</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0Pick"><span class="toc-number">1.1.</span> <span class="toc-text">实现Pick</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0Readonly"><span class="toc-number">1.2.</span> <span class="toc-text">实现Readonly</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%83%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.3.</span> <span class="toc-text">元组转换为对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0"><span class="toc-number">1.4.</span> <span class="toc-text">第一个元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E5%85%83%E7%BB%84%E9%95%BF%E5%BA%A6"><span class="toc-number">1.5.</span> <span class="toc-text">获取元组长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exclude"><span class="toc-number">1.6.</span> <span class="toc-text">Exclude</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Awaited"><span class="toc-number">1.7.</span> <span class="toc-text">Awaited</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#If"><span class="toc-number">1.8.</span> <span class="toc-text">If</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Concat"><span class="toc-number">1.9.</span> <span class="toc-text">Concat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Includes"><span class="toc-number">1.10.</span> <span class="toc-text">Includes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Push"><span class="toc-number">1.11.</span> <span class="toc-text">Push</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&text=Ts类型体操"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&title=Ts类型体操"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&is_video=false&description=Ts类型体操"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Ts类型体操&body=Check out this article: https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&title=Ts类型体操"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&title=Ts类型体操"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&title=Ts类型体操"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&title=Ts类型体操"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&name=Ts类型体操&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/12/08/Ts%E7%B1%BB%E5%9E%8B%E4%BD%93%E6%93%8D/&t=Ts类型体操"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    BenGuanRan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/blog/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/blog/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+    <!-- jquery -->
+ 
+  
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+   
+    
+<script src="/blog/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

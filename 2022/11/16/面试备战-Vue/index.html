@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Vue2、3响应式原理Vue2使用Object.defineProperty,而Vue3使用Es6 Proxy   前者无法对数组监听起到很好的效果，且无法监听对象添加了属性，通过下标方式修改数组数据 前者只能劫持对象的属性 后者不但可以劫持对象，数组，且支持劫持新增的属性  1234567891011121314151617181920212223242526let obj &#x3D; &amp;#123;&amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue">
+<meta property="og:url" content="https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/index.html">
+<meta property="og:site_name" content="BenGuanRan&#39;s Blog">
+<meta property="og:description" content="Vue2、3响应式原理Vue2使用Object.defineProperty,而Vue3使用Es6 Proxy   前者无法对数组监听起到很好的效果，且无法监听对象添加了属性，通过下标方式修改数组数据 前者只能劫持对象的属性 后者不但可以劫持对象，数组，且支持劫持新增的属性  1234567891011121314151617181920212223242526let obj &#x3D; &amp;#123;&amp;#">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s1.ax1x.com/2022/11/22/z3uAOI.png">
+<meta property="article:published_time" content="2022-11-15T16:03:54.000Z">
+<meta property="article:modified_time" content="2023-04-09T05:43:18.426Z">
+<meta property="article:author" content="BenGuanRan">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2022/11/22/z3uAOI.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/blog/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/blog/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Vue</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/blog/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/blog/2022/11/23/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/blog/2022/11/12/%E5%89%8D%E7%AB%AF%E5%A4%87%E6%88%98-CSS/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&text=Vue"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&title=Vue"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&is_video=false&description=Vue"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Vue&body=Check out this article: https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&title=Vue"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&title=Vue"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&title=Vue"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&title=Vue"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&name=Vue&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&t=Vue"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue2%E3%80%813%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">Vue2、3响应式原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hash%E6%A8%A1%E5%BC%8F%E5%92%8CHistory%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">Hash模式和History模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFMVVM%E3%80%81MVC%E3%80%81MVP"><span class="toc-number">3.</span> <span class="toc-text">什么是MVVM、MVC、MVP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MVVM"><span class="toc-number">4.</span> <span class="toc-text">MVVM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MVC"><span class="toc-number">5.</span> <span class="toc-text">MVC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MVP"><span class="toc-number">6.</span> <span class="toc-text">MVP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">7.</span> <span class="toc-text">生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E4%BA%8B%E4%BB%B6%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="toc-number">8.</span> <span class="toc-text">常见的事件修饰符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E5%AD%98%E9%A1%B5%E9%9D%A2%E5%BD%93%E5%89%8D%E7%9A%84%E7%8A%B6%E6%80%81"><span class="toc-number">9.</span> <span class="toc-text">如何保存页面当前的状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Data%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E5%87%BD%E6%95%B0"><span class="toc-number">10.</span> <span class="toc-text">Data为什么是函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nextTick"><span class="toc-number">11.</span> <span class="toc-text">$nextTick</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E9%A1%B5%E9%9D%A2%EF%BC%88spa%EF%BC%89%E5%A4%9A%E9%A1%B5%E9%9D%A2%EF%BC%88mpa%EF%BC%89"><span class="toc-number">12.</span> <span class="toc-text">单页面（spa）多页面（mpa）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue-Template%E5%88%B0render%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="toc-number">13.</span> <span class="toc-text">Vue Template到render的过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue-data%E5%80%BC%E5%8F%91%E7%94%9F%E6%94%B9%E5%8F%98%E4%BC%9A%E7%9B%B4%E6%8E%A5%E5%90%8C%E6%AD%A5%E6%89%A7%E8%A1%8C%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0%E5%90%97%EF%BC%9F"><span class="toc-number">14.</span> <span class="toc-text">Vue data值发生改变会直接同步执行渲染函数吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mixin%E3%80%81extends"><span class="toc-number">15.</span> <span class="toc-text">mixin、extends</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#delete%E5%92%8CVue-delete%E5%88%A0%E9%99%A4%E6%95%B0%E7%BB%84%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">16.</span> <span class="toc-text">delete和Vue.delete删除数组的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3SSR%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%B8%B2%E6%9F%93"><span class="toc-number">17.</span> <span class="toc-text">如何理解SSR服务端渲染</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">18.</span> <span class="toc-text">Vue性能优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3Vue%E5%8A%A0%E8%BD%BD%E8%8A%B1%E5%B1%8F%E9%97%AE%E9%A2%98"><span class="toc-number">19.</span> <span class="toc-text">解决Vue加载花屏问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1"><span class="toc-number">20.</span> <span class="toc-text">组件通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1"><span class="toc-number">21.</span> <span class="toc-text">路由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%87%92%E5%8A%A0%E8%BD%BD"><span class="toc-number">22.</span> <span class="toc-text">懒加载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hash%E4%B8%8EHistory"><span class="toc-number">23.</span> <span class="toc-text">Hash与History</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#route%E4%B8%8Erouter"><span class="toc-number">24.</span> <span class="toc-text">route与router</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1"><span class="toc-number">25.</span> <span class="toc-text">动态路由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A6%E5%8F%91%E9%92%A9%E5%AD%90%E7%9A%84%E5%AE%8C%E6%95%B4%E9%A1%BA%E5%BA%8F"><span class="toc-number">26.</span> <span class="toc-text">触发钩子的完整顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue-router%E8%B7%B3%E8%BD%AC%E5%92%8Clocation-href%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="toc-number">27.</span> <span class="toc-text">Vue-router跳转和location.href有什么区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-number">28.</span> <span class="toc-text">对前端路由的理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vuex"><span class="toc-number">29.</span> <span class="toc-text">Vuex</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue3%E5%8D%87%E7%BA%A7%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-number">30.</span> <span class="toc-text">Vue3升级了什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9FDOM"><span class="toc-number">31.</span> <span class="toc-text">虚拟DOM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9FDOM%E5%AF%B9%E6%AF%94%E7%9C%9F%E5%AE%9EDOM"><span class="toc-number">32.</span> <span class="toc-text">虚拟DOM对比真实DOM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#diff%E7%AE%97%E6%B3%95"><span class="toc-number">33.</span> <span class="toc-text">diff算法</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Vue
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">BenGuanRan</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-11-15T16:03:54.000Z" itemprop="datePublished">2022-11-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/blog/tags/Vue/" rel="tag">Vue</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Vue2、3响应式原理"><a href="#Vue2、3响应式原理" class="headerlink" title="Vue2、3响应式原理"></a>Vue2、3响应式原理</h2><p>Vue2使用Object.defineProperty,而Vue3使用Es6 Proxy </p>
+<ul>
+<li>前者无法对数组监听起到很好的效果，且无法监听对象添加了属性，通过下标方式修改数组数据</li>
+<li>前者只能劫持对象的属性</li>
+<li>后者不但可以劫持对象，数组，且支持劫持新增的属性</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;&#125;</span><br><span class="line"><span class="comment">// 数据描述符</span></span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(obj, <span class="string">&#x27;key&#x27;</span>, &#123;</span><br><span class="line">    <span class="attr">value</span>: <span class="number">1</span>, <span class="comment">// 设置初始值</span></span><br><span class="line">    <span class="attr">writable</span>: <span class="literal">false</span>, <span class="comment">// 设置是否可写</span></span><br><span class="line">    <span class="attr">enumerable</span>: <span class="literal">true</span>, <span class="comment">// 设置是否可循环</span></span><br><span class="line">    <span class="attr">configurable</span>: <span class="literal">true</span>, <span class="comment">// 属性是否可删除</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">obj.<span class="property">key</span> = <span class="number">2</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="property">key</span>); <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> obj2 = &#123;&#125;</span><br><span class="line"><span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(obj2, <span class="string">&#x27;key&#x27;</span>, &#123;</span><br><span class="line">    <span class="title function_">get</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;执行了get操作&#x27;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="title function_">set</span>(<span class="params">val</span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;执行了set操作&#x27;</span>);</span><br><span class="line">        val++</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj2.<span class="property">key</span>);</span><br><span class="line">obj2.<span class="property">key</span> = <span class="number">3</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj2.<span class="property">key</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;aran&#x27;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">school</span>: &#123;</span><br><span class="line">        <span class="attr">aign</span>: <span class="string">&#x27;no1&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 封装一个监听数据变化的函数</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">defineProperty</span>(<span class="params">obj, key, val</span>) &#123;</span><br><span class="line">    <span class="comment">// 如果监听的值是对象，则也需要进行观察</span></span><br><span class="line"></span><br><span class="line">    <span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(obj, key, &#123;</span><br><span class="line">        <span class="title function_">get</span>(<span class="params"></span>) &#123;</span><br><span class="line">            <span class="title function_">observer</span>(val)</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;get&#x27;</span>);</span><br><span class="line">            <span class="keyword">return</span> val</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="title function_">set</span>(<span class="params">newVal</span>) &#123;</span><br><span class="line">            <span class="title function_">observer</span>(val)</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;set&#x27;</span>);</span><br><span class="line">            val = newVal</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">observer</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> obj !== <span class="string">&#x27;object&#x27;</span> || obj == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 给对象每个属性都设置响应式</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">in</span> obj) &#123;</span><br><span class="line">        <span class="title function_">defineProperty</span>(obj, i, obj[i])</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">observer</span>(obj)</span><br><span class="line">obj.<span class="property">name</span> = <span class="number">1</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(obj.<span class="property">school</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Hash模式和History模式"><a href="#Hash模式和History模式" class="headerlink" title="Hash模式和History模式"></a>Hash模式和History模式</h2><p>更新视图但不重新请求界面，Vue通过监听地址栏的变化，将匹配的组件加载到对应的router-view中。</p>
+<ul>
+<li>在url表现上hash有#</li>
+<li>原理上，Hash是浏览器监听<strong>onhashchange</strong>事件的</li>
+<li>history是通过修改浏览器历史记录进行修改，但不会立即对后端进行请求，<strong>pushState()</strong>, <strong>replaceState()</strong> 通过<strong>popState</strong>事件监听</li>
+<li>history模式会占用服务器资源，而hash不利于seo优化</li>
+</ul>
+<h2 id="什么是MVVM、MVC、MVP"><a href="#什么是MVVM、MVC、MVP" class="headerlink" title="什么是MVVM、MVC、MVP"></a>什么是MVVM、MVC、MVP</h2><h2 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h2><p>M代表数据</p>
+<p>V代表组件</p>
+<p>VM代表同步View和Model的对象</p>
+<p>MVC与MVVM区别其实并不大，都是一种设计思想，主要是vm与c的不同，vue基于数据驱动，数据改变，自动更新视图，而不是告知view去操作DOM更新视图</p>
+<h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><ul>
+<li>M数据</li>
+<li>V视图</li>
+<li>C控制器（用于监听用户与应用的响应操作，一旦用户与页面进行交互，controller触发器会告知model去修改数据，model再通知view更新视图）</li>
+</ul>
+<h2 id="MVP"><a href="#MVP" class="headerlink" title="MVP"></a>MVP</h2><p>实现了v与M的解耦，原来的C无法去更新View，但是MVP模式下，P(Presenter)代替了C，可以将视图和数据进行同步更新</p>
+<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><p>每个Vue组件实例在创建时都会经历一系列的初始化步骤，比如<strong>设置数据侦听</strong>，<strong>编译模板</strong>，挂<strong>载实例到DOM</strong>，<strong>数据更新时修改DOM</strong>。在这些过程中会运行特定的声明周期钩子来做一些事情。</p>
+<p>顺序如下：</p>
+<ul>
+<li>setup 第一个调用，此时还没有初始化</li>
+<li>beforeCreate Vue实例创建完毕之前执行</li>
+<li>created Vue实例创建完毕之后执行</li>
+<li>beforeMount 模板渲染在页面之前执行</li>
+<li>mounted 模板渲染在页面之后执行</li>
+<li>beforeUnmount组件销毁前执行</li>
+<li>unmounted组件销毁后执行</li>
+<li>beforeUpdate 数据更新前执行</li>
+<li>updated数据更新后执行</li>
+</ul>
+<h2 id="常见的事件修饰符"><a href="#常见的事件修饰符" class="headerlink" title="常见的事件修饰符"></a>常见的事件修饰符</h2><ul>
+<li>stop 阻止事件冒泡</li>
+<li>prevent 阻止默认事件</li>
+<li>capture 开启事件捕获模式</li>
+<li>self 只触发自身范围内的事件</li>
+<li>once 只会触发一次</li>
+</ul>
+<h2 id="如何保存页面当前的状态"><a href="#如何保存页面当前的状态" class="headerlink" title="如何保存页面当前的状态"></a>如何保存页面当前的状态</h2><p>分为两种情况：</p>
+<ul>
+<li>前组件会被卸载<ul>
+<li>用h5web存储来记录组件卸载前的状态</li>
+<li>路由传值</li>
+</ul>
+</li>
+<li>前组件不会被卸载<ul>
+<li>要切换的组件作为子组件全屏渲染，父组件中正常储存页面状态。</li>
+</ul>
+</li>
+</ul>
+<p>keep-alive保存状态</p>
+<h2 id="Data为什么是函数"><a href="#Data为什么是函数" class="headerlink" title="Data为什么是函数"></a>Data为什么是函数</h2><p>为了组件复用，每次获取一个新的data，避免data数据域污染</p>
+<h2 id="nextTick"><a href="#nextTick" class="headerlink" title="$nextTick"></a>$nextTick</h2><p>由于vue是异步渲染的，因此改变DOM之后，立即获取DOM信息是不准确的，因此需要调用nextTick函数，在DOM异步渲染完毕之后，再调用nextTick中的回调函数来获取DOM信息。</p>
+<p>使用场景：</p>
+<ul>
+<li>在数据变化后执行某个操作</li>
+<li>created钩子中，由于DOM还没渲染，所以此时如果想要操纵DOM，必须将操作代码放在nextTick回调函数中。</li>
+<li>比如我现在点击按钮，修改组件的文字，然后立即获取该组件，并打印，发现打印出的组件文字并没有修改。想要获取修改之后的组件需要使用nextTick函数，并传递一个回调函数，修改组件之后会调用该回调函数。</li>
+</ul>
+<h2 id="单页面（spa）多页面（mpa）"><a href="#单页面（spa）多页面（mpa）" class="headerlink" title="单页面（spa）多页面（mpa）"></a>单页面（spa）多页面（mpa）</h2><ul>
+<li>单页面，只有一个主页面应用，一开始只需要加载一次相关资源。每次切换仅刷新局部资源。</li>
+<li>多页面，有多个独立页面，每个页面必须重复加载资源，页面跳转需要多次加载资源，整页资源刷新。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/z3uAOI"><img src="https://s1.ax1x.com/2022/11/22/z3uAOI.png" alt="z3uAOI.png"></a></p>
+<h2 id="Vue-Template到render的过程"><a href="#Vue-Template到render的过程" class="headerlink" title="Vue Template到render的过程"></a>Vue Template到render的过程</h2><p>解析、优化、生成</p>
+<ol>
+<li>调用parase方法将template解析为AST抽象语法树</li>
+<li>对静态节点做优化，进行标记，避免每次重复渲染静态节点</li>
+<li>将AST转化为render函数字符串</li>
+</ol>
+<h2 id="Vue-data值发生改变会直接同步执行渲染函数吗？"><a href="#Vue-data值发生改变会直接同步执行渲染函数吗？" class="headerlink" title="Vue data值发生改变会直接同步执行渲染函数吗？"></a>Vue data值发生改变会直接同步执行渲染函数吗？</h2><p>不会立即同步执行重新渲染。 Vue 实现响应式并不是数据发生变化之后 DOM 立即变化，而是按一定的策略进行 DOM 的更新。 Vue 在更新 DOM 时是异步执行的。 只要侦听到数据变化， Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更。</p>
+<p>如果同一个watcher被多次触发，只会被推入到队列中一次。 这种在缓冲时去除重复数据对于避免不必要的计算和 DOM 操作是非常重要的。 然后，在下一个的事件循环tick中，Vue 刷新队列并执行实际（已去重的）工作。</p>
+<h2 id="mixin、extends"><a href="#mixin、extends" class="headerlink" title="mixin、extends"></a><strong>mixin、extends</strong></h2><p>mixin混入，Vue3明确表示可以使用组合式api代替mixin的使用，目的是复用组件逻辑</p>
+<p>extends，组件继承，与mixin类似，复用组件逻辑</p>
+<h2 id="delete和Vue-delete删除数组的区别"><a href="#delete和Vue-delete删除数组的区别" class="headerlink" title="delete和Vue.delete删除数组的区别"></a><strong>delete和Vue.delete删除数组的区别</strong></h2><p>前者只是将数组当前下标数据置为空，后者是直接移除数组元素，后边往前移</p>
+<h2 id="如何理解SSR服务端渲染"><a href="#如何理解SSR服务端渲染" class="headerlink" title="如何理解SSR服务端渲染"></a>如何理解SSR服务端渲染</h2><p>也就是服务端渲染，将Vue在客户端标签渲染程HTML的工作放到服务端完成后，返回给客户端。</p>
+<p>优点：</p>
+<ul>
+<li>SEO优化</li>
+<li>首屏加载速度更快</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>服务端负载</li>
+<li>对Node.js环境要求更高</li>
+<li>服务端只支持beforeCreated和created两个钩子</li>
+</ul>
+<h2 id="Vue性能优化"><a href="#Vue性能优化" class="headerlink" title="Vue性能优化"></a>Vue性能优化</h2><p>编码阶段</p>
+<ul>
+<li>尽量减少data中的数据段</li>
+<li>v-if和v-for不能连用，但是v3之后提升了v-if的优先级，使得可以连用</li>
+<li>使用事件委托的方式为v-for每一项绑定事件</li>
+<li>SPA应用采用keep-alive缓存组件</li>
+<li>更多情况使用v-if代替v-show</li>
+<li>懒加载，异步组件</li>
+<li>防抖节流</li>
+<li>第三方模块按需引入</li>
+<li>图片懒加载</li>
+<li>长列表滚动到可视区域动态加载（可以使用自定义组件的方式）</li>
+</ul>
+<p>SEO优化</p>
+<ul>
+<li>预渲染</li>
+<li>服务端渲染</li>
+</ul>
+<p>用户体验</p>
+<ul>
+<li>骨架屏</li>
+</ul>
+<h2 id="解决Vue加载花屏问题"><a href="#解决Vue加载花屏问题" class="headerlink" title="解决Vue加载花屏问题"></a>解决Vue加载花屏问题</h2><ol>
+<li>添加v-cloak，当解析完成后，vue会自动删除v-cloak属性，因此可以配合css属性选择器</li>
+<li>在根元素添加<strong>style&#x3D;”display: none;” :style&#x3D;”{display: ‘block’}”</strong></li>
+</ol>
+<h2 id="组件通信"><a href="#组件通信" class="headerlink" title="组件通信"></a>组件通信</h2><ul>
+<li>Vuex</li>
+<li>props&#x2F;emit</li>
+<li>ingect&#x2F;provide</li>
+<li>$attrs&#x2F;$listeners</li>
+<li>$children&#x2F;$parent</li>
+<li>eventbus事件总线</li>
+<li>$refs获取组件实例</li>
+</ul>
+<h2 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h2><h2 id="懒加载"><a href="#懒加载" class="headerlink" title="懒加载"></a>懒加载</h2><ul>
+<li>箭头函数+import引入</li>
+<li>箭头函数+require动态加载</li>
+<li>webpack</li>
+</ul>
+<h2 id="Hash与History"><a href="#Hash与History" class="headerlink" title="Hash与History"></a>Hash与History</h2><p>Hash实现原理是通过监听onHashChange事件来切换页面，可以称之为严格意义上的前端路由，因为完全不和后端进行交互，浏览器支持度高。</p>
+<p>history实现原理是通过H5 history api 新增的pushState() 与 replaceState()方法，对浏览器历史记录进行修改，修改url并不会立即刷新页面，但是手动刷新会报404，必须后端同志配合。</p>
+<h2 id="route与router"><a href="#route与router" class="headerlink" title="route与router"></a>route与router</h2><p>route是路由信息对象，包括 path，params，hash，query，fullPath，matched，name 等路由信息参数</p>
+<p>router是路由实例对象，包括了路由的跳转方法，钩子函数等。</p>
+<h2 id="动态路由"><a href="#动态路由" class="headerlink" title="动态路由"></a>动态路由</h2><ol>
+<li><p><strong>params方式</strong></p>
+ <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在APP.vue中</span></span><br><span class="line">&lt;router-link :to=<span class="string">&quot;&#x27;/user/&#x27;+ userId&quot;</span> replace&gt;用户&lt;/router-link&gt;    </span><br><span class="line"></span><br><span class="line"><span class="comment">//在index.js</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="attr">path</span>: <span class="string">&#x27;/user/:userid&#x27;</span>,</span><br><span class="line">   <span class="attr">component</span>: <span class="title class_">User</span>,</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法1：</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">router-link</span> <span class="attr">:to</span>=<span class="string">&quot;&#123; name: &#x27;users&#x27;, params: &#123; uname: wade &#125;&#125;&quot;</span>&gt;</span>按钮&lt;/router-link</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">// 方法2：</span></span><br><span class="line"><span class="language-xml">this.$router.push(&#123;name:&#x27;users&#x27;,params:&#123;uname:wade&#125;&#125;)</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">// 方法3：</span></span><br><span class="line"><span class="language-xml">this.$router.push(&#x27;/user/&#x27; + wade)</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">// 参数获取</span></span><br><span class="line"><span class="language-xml">$route.params.userid</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>query模式</strong></p>
+</li>
+</ol>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 配置路由</span></span><br><span class="line">普通配置即可</span><br><span class="line"></span><br><span class="line"><span class="comment">// 路由跳转</span></span><br><span class="line"><span class="comment">// 方法1：</span></span><br><span class="line">&lt;router-link :to=<span class="string">&quot;&#123; name: &#x27;users&#x27;, query: &#123; uname: james &#125;&#125;&quot;</span>&gt;按钮&lt;/router-link&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法2：</span></span><br><span class="line"><span class="variable language_">this</span>.<span class="property">$router</span>.<span class="title function_">push</span>(&#123; <span class="attr">name</span>: <span class="string">&#x27;users&#x27;</span>, <span class="attr">query</span>:&#123; <span class="attr">uname</span>:james &#125;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法3：</span></span><br><span class="line">&lt;router-link :to=<span class="string">&quot;&#123; path: &#x27;/user&#x27;, query: &#123; uname:james &#125;&#125;&quot;</span>&gt;按钮&lt;/router-link&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法4：</span></span><br><span class="line"><span class="variable language_">this</span>.<span class="property">$router</span>.<span class="title function_">push</span>(&#123; <span class="attr">path</span>: <span class="string">&#x27;/user&#x27;</span>, <span class="attr">query</span>:&#123; <span class="attr">uname</span>:james &#125;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法5：</span></span><br><span class="line"><span class="variable language_">this</span>.<span class="property">$router</span>.<span class="title function_">push</span>(<span class="string">&#x27;/user?uname=&#x27;</span> + jsmes)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取参数</span></span><br><span class="line">$route.<span class="property">query</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="触发钩子的完整顺序"><a href="#触发钩子的完整顺序" class="headerlink" title="触发钩子的完整顺序"></a>触发钩子的完整顺序</h2><p>假设组件A、B都被keep-alive组件包裹，从A组件首次进入B组件</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">beforeRouteLeave → beforeEach → beforeEnter → beforeRouteEnter → beforeResolve → </span><br><span class="line">afterEach → beforeCreated → created → beforeMounted → deactivated → mounted → </span><br><span class="line">activited → beforeRouterEnter-next中的回调函数 </span><br></pre></td></tr></table></figure>
+
+<h2 id="Vue-router跳转和location-href有什么区别"><a href="#Vue-router跳转和location-href有什么区别" class="headerlink" title="Vue-router跳转和location.href有什么区别"></a><strong>Vue-router跳转和location.href有什么区别</strong></h2><p>location.href 跳转刷新了页面，而router.push()并没有刷新页面</p>
+<p>在history模式中，history.pushState(XXX)跳转和router.push(XXX)跳转本质上没区别。</p>
+<h2 id="对前端路由的理解"><a href="#对前端路由的理解" class="headerlink" title="对前端路由的理解"></a>对前端路由的理解</h2><p>起初阶段，每个页面对应一个url，每次切换页面需要从浏览器重新加载资源并刷新页面</p>
+<p>随着Ajax(可以在不刷新页面发起请求)的出现，催生出了SPA页面的概念，但是在SPA诞生之初，切换页面url始终保持不变，浏览器无法准确记录访问历时，因此出现了前端路由，也就是浏览器展示的组件与url的一个映射关系，从而实现JS切换展示组件的功能，并且能记录历时记录。</p>
+<h2 id="Vuex"><a href="#Vuex" class="headerlink" title="Vuex"></a>Vuex</h2><ul>
+<li>State用来存放公共状态</li>
+<li>Getter相当于Vuex的计算属性<ul>
+<li>普通访问</li>
+<li>函数访问</li>
+</ul>
+</li>
+<li>Mutation存放函数用于变更状态<ul>
+<li>Mutation中必须存放同步代码，不可以异步修改State的值</li>
+<li>采用commit的方式唤醒Mutation事件</li>
+</ul>
+</li>
+<li>Action用于异步提交Mutation事件从而变更State状态<ul>
+<li>采用派发dispatch的方式唤醒Action事件</li>
+</ul>
+</li>
+<li>Module允许将臃肿的Vuex分模块</li>
+</ul>
+<h2 id="Vue3升级了什么"><a href="#Vue3升级了什么" class="headerlink" title="Vue3升级了什么"></a>Vue3升级了什么</h2><ol>
+<li><p>检测机制改变</p>
+<p> 有原来的Object.defineProperty变为了ES6 Proxy，Proxy最大的好处就是可以一次对整个对象监听，不用再一次遍历对象属性进行监听。其次就是支持数组、Map、Set等更多的数据类型监听</p>
+</li>
+<li><p>提升了v-if优先级，高于v-for</p>
+</li>
+<li><p>将作用域插槽改成了函数的方式，当插槽改变，父组件不用跟着重新渲染了</p>
+</li>
+<li><p>新增了组合式api，更好抽离业务逻辑，解决了原来的this指向问题</p>
+</li>
+</ol>
+<h2 id="虚拟DOM"><a href="#虚拟DOM" class="headerlink" title="虚拟DOM"></a>虚拟DOM</h2><p>Virtual Dom实际上式一个JS对象，通过对象的方式来表示DOM结构，配合不同的渲染工具，使跨平台成为可能。通过将多次Dom修改的结果一次性更新到页面上，从而减少页面的渲染次数。</p>
+<p>再每次数据发生变化之前，虚拟DOM都会将新旧VDOM通过diff算法进行对比，从而改变真实DOM。</p>
+<h2 id="虚拟DOM对比真实DOM"><a href="#虚拟DOM对比真实DOM" class="headerlink" title="虚拟DOM对比真实DOM"></a>虚拟DOM对比真实DOM</h2><p>真实DOM：生成HTML字符串、重建所有DOM元素</p>
+<p>虚拟DOM：生成Node、diff算法、更新必要DOM</p>
+<p>虚拟DOM首次加载DOM更慢，但是在真实DOM针对特定优化下更快</p>
+<h2 id="diff算法"><a href="#diff算法" class="headerlink" title="diff算法"></a>diff算法</h2><p>不会跨级对比，只会在新旧VDOM树的同一层去对比。</p>
+<p>深度遍历的过程</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/blog/search/">Search</a></li>
+         
+          <li><a href="/blog/">Home</a></li>
+         
+          <li><a href="/blog/archives/">writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li>
+         
+          <li><a href="/blog/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue2%E3%80%813%E5%93%8D%E5%BA%94%E5%BC%8F%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">Vue2、3响应式原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hash%E6%A8%A1%E5%BC%8F%E5%92%8CHistory%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">Hash模式和History模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFMVVM%E3%80%81MVC%E3%80%81MVP"><span class="toc-number">3.</span> <span class="toc-text">什么是MVVM、MVC、MVP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MVVM"><span class="toc-number">4.</span> <span class="toc-text">MVVM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MVC"><span class="toc-number">5.</span> <span class="toc-text">MVC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MVP"><span class="toc-number">6.</span> <span class="toc-text">MVP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">7.</span> <span class="toc-text">生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E4%BA%8B%E4%BB%B6%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="toc-number">8.</span> <span class="toc-text">常见的事件修饰符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E5%AD%98%E9%A1%B5%E9%9D%A2%E5%BD%93%E5%89%8D%E7%9A%84%E7%8A%B6%E6%80%81"><span class="toc-number">9.</span> <span class="toc-text">如何保存页面当前的状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Data%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E5%87%BD%E6%95%B0"><span class="toc-number">10.</span> <span class="toc-text">Data为什么是函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nextTick"><span class="toc-number">11.</span> <span class="toc-text">$nextTick</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E9%A1%B5%E9%9D%A2%EF%BC%88spa%EF%BC%89%E5%A4%9A%E9%A1%B5%E9%9D%A2%EF%BC%88mpa%EF%BC%89"><span class="toc-number">12.</span> <span class="toc-text">单页面（spa）多页面（mpa）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue-Template%E5%88%B0render%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="toc-number">13.</span> <span class="toc-text">Vue Template到render的过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue-data%E5%80%BC%E5%8F%91%E7%94%9F%E6%94%B9%E5%8F%98%E4%BC%9A%E7%9B%B4%E6%8E%A5%E5%90%8C%E6%AD%A5%E6%89%A7%E8%A1%8C%E6%B8%B2%E6%9F%93%E5%87%BD%E6%95%B0%E5%90%97%EF%BC%9F"><span class="toc-number">14.</span> <span class="toc-text">Vue data值发生改变会直接同步执行渲染函数吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mixin%E3%80%81extends"><span class="toc-number">15.</span> <span class="toc-text">mixin、extends</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#delete%E5%92%8CVue-delete%E5%88%A0%E9%99%A4%E6%95%B0%E7%BB%84%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">16.</span> <span class="toc-text">delete和Vue.delete删除数组的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3SSR%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%B8%B2%E6%9F%93"><span class="toc-number">17.</span> <span class="toc-text">如何理解SSR服务端渲染</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">18.</span> <span class="toc-text">Vue性能优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3Vue%E5%8A%A0%E8%BD%BD%E8%8A%B1%E5%B1%8F%E9%97%AE%E9%A2%98"><span class="toc-number">19.</span> <span class="toc-text">解决Vue加载花屏问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1"><span class="toc-number">20.</span> <span class="toc-text">组件通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1"><span class="toc-number">21.</span> <span class="toc-text">路由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%87%92%E5%8A%A0%E8%BD%BD"><span class="toc-number">22.</span> <span class="toc-text">懒加载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hash%E4%B8%8EHistory"><span class="toc-number">23.</span> <span class="toc-text">Hash与History</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#route%E4%B8%8Erouter"><span class="toc-number">24.</span> <span class="toc-text">route与router</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E8%B7%AF%E7%94%B1"><span class="toc-number">25.</span> <span class="toc-text">动态路由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A6%E5%8F%91%E9%92%A9%E5%AD%90%E7%9A%84%E5%AE%8C%E6%95%B4%E9%A1%BA%E5%BA%8F"><span class="toc-number">26.</span> <span class="toc-text">触发钩子的完整顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue-router%E8%B7%B3%E8%BD%AC%E5%92%8Clocation-href%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="toc-number">27.</span> <span class="toc-text">Vue-router跳转和location.href有什么区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-number">28.</span> <span class="toc-text">对前端路由的理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vuex"><span class="toc-number">29.</span> <span class="toc-text">Vuex</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue3%E5%8D%87%E7%BA%A7%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-number">30.</span> <span class="toc-text">Vue3升级了什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9FDOM"><span class="toc-number">31.</span> <span class="toc-text">虚拟DOM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9FDOM%E5%AF%B9%E6%AF%94%E7%9C%9F%E5%AE%9EDOM"><span class="toc-number">32.</span> <span class="toc-text">虚拟DOM对比真实DOM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#diff%E7%AE%97%E6%B3%95"><span class="toc-number">33.</span> <span class="toc-text">diff算法</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&text=Vue"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&title=Vue"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&is_video=false&description=Vue"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Vue&body=Check out this article: https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&title=Vue"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&title=Vue"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&title=Vue"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&title=Vue"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&name=Vue&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://benguanran.github.io/2022/11/16/%E9%9D%A2%E8%AF%95%E5%A4%87%E6%88%98-Vue/&t=Vue"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2020-2023
+    BenGuanRan
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/blog/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/blog/">Home</a></li><!--
+     --><!--
+       --><li><a href="/blog/archives/">writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/BenGuanRan">Projects</a></li><!--
+     --><!--
+       --><li><a href="/blog/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/blog/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/blog/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+    <!-- jquery -->
+ 
+  
+<script src="/blog/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+   
+    
+<script src="/blog/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/blog/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
